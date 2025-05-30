@@ -2,7 +2,6 @@
 
 > **Enterprise-grade real-time communication platform built with modern technologies, zero-trust security, and cloud-native architecture.**
 
-[![Build Status](https://github.com/your-org/chat-rooms/workflows/CI/badge.svg)](https://github.com/your-org/chat-rooms/actions)
 [![Security Score](https://img.shields.io/badge/Security-A+-brightgreen)](./docs/SECURITY.md)
 [![Coverage](https://img.shields.io/badge/Coverage-92%25-brightgreen)](./coverage)
 [![License](https://img.shields.io/badge/License-Enterprise-blue.svg)](./LICENSE)
