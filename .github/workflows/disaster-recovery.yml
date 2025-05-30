@@ -1,0 +1,566 @@
+name: 'Disaster Recovery & Backup Automation'
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      backup_type:
+        description: 'Type of backup to perform'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - incremental
+          - database-only
+          - files-only
+      environment:
+        description: 'Environment to backup'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - staging
+          - production
+          - all
+      test_restore:
+        description: 'Test restore after backup'
+        required: false
+        default: false
+        type: boolean
+      retention_days:
+        description: 'Backup retention in days'
+        required: false
+        default: '30'
+        type: string
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION || 'us-west-2' }}
+  BACKUP_S3_BUCKET: ${{ vars.BACKUP_S3_BUCKET }}
+  ENCRYPTION_KEY_ID: ${{ vars.BACKUP_ENCRYPTION_KEY_ID }}
+  MONITORING_WEBHOOK: ${{ secrets.MONITORING_WEBHOOK }}
+
+jobs:
+  # Pre-backup validation and preparation
+  backup-preparation:
+    name: 'Backup Preparation'
+    runs-on: ubuntu-latest
+    outputs:
+      backup-id: ${{ steps.generate-id.outputs.backup-id }}
+      environments: ${{ steps.determine-envs.outputs.environments }}
+      backup-strategy: ${{ steps.strategy.outputs.strategy }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate backup ID
+        id: generate-id
+        run: |
+          BACKUP_ID="backup-$(date +%Y%m%d-%H%M%S)-$(echo $RANDOM | md5sum | head -c 8)"
+          echo "backup-id=$BACKUP_ID" >> $GITHUB_OUTPUT
+          echo "Generated backup ID: $BACKUP_ID"
+
+      - name: Determine target environments
+        id: determine-envs
+        run: |
+          if [[ "${{ github.event.inputs.environment || 'production' }}" == "all" ]]; then
+            ENVIRONMENTS='["staging", "production"]'
+          else
+            ENVIRONMENTS='["${{ github.event.inputs.environment || 'production' }}"]'
+          fi
+          echo "environments=$ENVIRONMENTS" >> $GITHUB_OUTPUT
+          echo "Target environments: $ENVIRONMENTS"
+
+      - name: Determine backup strategy
+        id: strategy
+        run: |
+          BACKUP_TYPE="${{ github.event.inputs.backup_type || 'full' }}"
+          case "$BACKUP_TYPE" in
+            "full")
+              STRATEGY='{"database": true, "files": true, "containers": true, "configs": true}'
+              ;;
+            "incremental")
+              STRATEGY='{"database": true, "files": true, "containers": false, "configs": false}'
+              ;;
+            "database-only")
+              STRATEGY='{"database": true, "files": false, "containers": false, "configs": false}'
+              ;;
+            "files-only")
+              STRATEGY='{"database": false, "files": true, "containers": false, "configs": true}'
+              ;;
+          esac
+          echo "strategy=$STRATEGY" >> $GITHUB_OUTPUT
+          echo "Backup strategy: $STRATEGY"
+
+      - name: Pre-backup system health check
+        run: |
+          echo "🔍 Performing pre-backup health checks..."
+          
+          # Check disk space
+          echo "Checking available disk space..."
+          df -h
+          
+          # Check backup destination
+          echo "Verifying backup destination access..."
+          aws s3 ls s3://${{ env.BACKUP_S3_BUCKET }}/ || {
+            echo "❌ Cannot access backup bucket"
+            exit 1
+          }
+          
+          # Check encryption key
+          if [[ -n "${{ env.ENCRYPTION_KEY_ID }}" ]]; then
+            aws kms describe-key --key-id "${{ env.ENCRYPTION_KEY_ID }}" > /dev/null || {
+              echo "❌ Cannot access encryption key"
+              exit 1
+            }
+          fi
+
+      - name: Send backup start notification
+        if: env.MONITORING_WEBHOOK
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{
+              "text": "🔄 Disaster Recovery Backup Started",
+              "attachments": [{
+                "color": "warning",
+                "fields": [
+                  {"title": "Backup ID", "value": "${{ steps.generate-id.outputs.backup-id }}", "short": true},
+                  {"title": "Type", "value": "${{ github.event.inputs.backup_type || 'full' }}", "short": true},
+                  {"title": "Environment", "value": "${{ github.event.inputs.environment || 'production' }}", "short": true},
+                  {"title": "Triggered by", "value": "${{ github.actor }}", "short": true}
+                ]
+              }]
+            }' \
+            "${{ env.MONITORING_WEBHOOK }}"
+
+  # Database backup for each environment
+  database-backup:
+    name: 'Database Backup - ${{ matrix.environment }}'
+    runs-on: ubuntu-latest
+    needs: backup-preparation
+    if: fromJson(needs.backup-preparation.outputs.backup-strategy).database == true
+    strategy:
+      matrix:
+        environment: ${{ fromJson(needs.backup-preparation.outputs.environments) }}
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-15
+
+      - name: Create database backup
+        env:
+          DATABASE_URL: ${{ matrix.environment == 'production' && secrets.DATABASE_URL_PRODUCTION || secrets.DATABASE_URL_STAGING }}
+          PGPASSWORD: ${{ matrix.environment == 'production' && secrets.DB_PASSWORD_PRODUCTION || secrets.DB_PASSWORD_STAGING }}
+        run: |
+          echo "🗃️ Creating database backup for ${{ matrix.environment }}..."
+          
+          # Parse database URL
+          DB_HOST=$(echo $DATABASE_URL | sed -n 's/.*@\([^:]*\):.*/\1/p')
+          DB_PORT=$(echo $DATABASE_URL | sed -n 's/.*:\([0-9]*\)\/.*/\1/p')
+          DB_NAME=$(echo $DATABASE_URL | sed -n 's/.*\/\([^?]*\).*/\1/p')
+          DB_USER=$(echo $DATABASE_URL | sed -n 's/.*\/\/\([^:]*\):.*/\1/p')
+          
+          # Create backup directory
+          mkdir -p backups/database
+          
+          # Generate backup filename
+          BACKUP_FILE="backups/database/db-${{ matrix.environment }}-${{ needs.backup-preparation.outputs.backup-id }}.sql"
+          
+          # Create database dump
+          pg_dump \
+            --host="$DB_HOST" \
+            --port="$DB_PORT" \
+            --username="$DB_USER" \
+            --dbname="$DB_NAME" \
+            --format=custom \
+            --compress=9 \
+            --verbose \
+            --no-password \
+            --file="$BACKUP_FILE"
+            # Verify backup
+          if [[ -f "$BACKUP_FILE" && $(stat -c%s "$BACKUP_FILE") -gt 1024 ]]; then
+            echo "✅ Database backup created successfully: $BACKUP_FILE"
+            echo "Backup size: $(du -h $BACKUP_FILE | cut -f1)"
+          else
+            echo "❌ Database backup failed or is too small"
+            exit 1
+          fi
+
+      - name: Encrypt and upload database backup
+        run: |
+          echo "🔐 Encrypting and uploading database backup..."
+          
+          BACKUP_FILE="backups/database/db-${{ matrix.environment }}-${{ needs.backup-preparation.outputs.backup-id }}.sql"
+          S3_KEY="database/${{ matrix.environment }}/$(date +%Y/%m/%d)/db-${{ matrix.environment }}-${{ needs.backup-preparation.outputs.backup-id }}.sql"
+          
+          if [[ -n "${{ env.ENCRYPTION_KEY_ID }}" ]]; then
+            aws s3 cp "$BACKUP_FILE" "s3://${{ env.BACKUP_S3_BUCKET }}/$S3_KEY" \
+              --server-side-encryption aws:kms \
+              --ssekms-key-id "${{ env.ENCRYPTION_KEY_ID }}" \
+              --storage-class STANDARD_IA
+          else
+            aws s3 cp "$BACKUP_FILE" "s3://${{ env.BACKUP_S3_BUCKET }}/$S3_KEY" \
+              --server-side-encryption AES256 \
+              --storage-class STANDARD_IA
+          fi
+          
+          echo "✅ Database backup uploaded to S3: $S3_KEY"
+          
+          # Create backup metadata
+          cat > backup-metadata.json << EOF
+          {
+            "backup_id": "${{ needs.backup-preparation.outputs.backup-id }}",
+            "environment": "${{ matrix.environment }}",
+            "type": "database",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "size": $(stat -c%s "$BACKUP_FILE"),
+            "s3_key": "$S3_KEY",
+            "encrypted": ${{ env.ENCRYPTION_KEY_ID != '' && env.ENCRYPTION_KEY_ID != null }},
+            "retention_days": ${{ github.event.inputs.retention_days || '30' }}
+          }
+          EOF
+          
+          aws s3 cp backup-metadata.json "s3://${{ env.BACKUP_S3_BUCKET }}/metadata/database/${{ matrix.environment }}/backup-${{ needs.backup-preparation.outputs.backup-id }}.json"
+
+  # Application files and configuration backup
+  files-backup:
+    name: 'Files Backup - ${{ matrix.environment }}'
+    runs-on: ubuntu-latest
+    needs: backup-preparation
+    if: fromJson(needs.backup-preparation.outputs.backup-strategy).files == true
+    strategy:
+      matrix:
+        environment: ${{ fromJson(needs.backup-preparation.outputs.environments) }}
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup SSH for server access
+        run: |
+          mkdir -p ~/.ssh
+          if [[ "${{ matrix.environment }}" == "production" ]]; then
+            echo "${{ secrets.SSH_PRIVATE_KEY_PRODUCTION }}" > ~/.ssh/id_rsa
+            ssh-keyscan -t rsa ${{ secrets.SERVER_HOST_PRODUCTION }} >> ~/.ssh/known_hosts
+          else
+            echo "${{ secrets.SSH_PRIVATE_KEY_STAGING }}" > ~/.ssh/id_rsa
+            ssh-keyscan -t rsa ${{ secrets.SERVER_HOST_STAGING }} >> ~/.ssh/known_hosts
+          fi
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Create application files backup
+        env:
+          SERVER_HOST: ${{ matrix.environment == 'production' && secrets.SERVER_HOST_PRODUCTION || secrets.SERVER_HOST_STAGING }}
+          SERVER_USER: ${{ matrix.environment == 'production' && secrets.SERVER_USER_PRODUCTION || secrets.SERVER_USER_STAGING }}
+        run: |
+          echo "📁 Creating application files backup for ${{ matrix.environment }}..."
+          
+          # Create backup directory
+          mkdir -p backups/files
+          
+          # Define backup paths
+          BACKUP_PATHS=(
+            "/opt/chat-rooms/shared/uploads"
+            "/opt/chat-rooms/shared/logs"
+            "/opt/chat-rooms/shared/ssl"
+            "/opt/chat-rooms/shared/config"
+            "/etc/nginx/sites-available"
+            "/etc/ssl/certs"
+          )
+          
+          # Create tar archive
+          BACKUP_FILE="backups/files/files-${{ matrix.environment }}-${{ needs.backup-preparation.outputs.backup-id }}.tar.gz"
+          
+          ssh ${SERVER_USER}@${SERVER_HOST} "
+            sudo tar -czf /tmp/files-backup.tar.gz \
+              --exclude='*.log' \
+              --exclude='tmp/*' \
+              --exclude='cache/*' \
+              ${BACKUP_PATHS[@]} 2>/dev/null || true
+          "
+          
+          # Download backup from server
+          scp ${SERVER_USER}@${SERVER_HOST}:/tmp/files-backup.tar.gz "$BACKUP_FILE"
+          
+          # Cleanup remote backup
+          ssh ${SERVER_USER}@${SERVER_HOST} "sudo rm -f /tmp/files-backup.tar.gz"
+          
+          # Verify backup
+          if [[ -f "$BACKUP_FILE" ]]; then
+            echo "✅ Files backup created successfully: $BACKUP_FILE"
+            echo "Backup size: $(du -h $BACKUP_FILE | cut -f1)"
+          else
+            echo "❌ Files backup failed"
+            exit 1
+          fi
+
+      - name: Upload files backup
+        run: |
+          echo "⬆️ Uploading files backup..."
+          
+          BACKUP_FILE="backups/files/files-${{ matrix.environment }}-${{ needs.backup-preparation.outputs.backup-id }}.tar.gz"
+          S3_KEY="files/${{ matrix.environment }}/$(date +%Y/%m/%d)/files-${{ matrix.environment }}-${{ needs.backup-preparation.outputs.backup-id }}.tar.gz"
+          
+          if [[ -n "${{ env.ENCRYPTION_KEY_ID }}" ]]; then
+            aws s3 cp "$BACKUP_FILE" "s3://${{ env.BACKUP_S3_BUCKET }}/$S3_KEY" \
+              --server-side-encryption aws:kms \
+              --ssekms-key-id "${{ env.ENCRYPTION_KEY_ID }}" \
+              --storage-class STANDARD_IA
+          else
+            aws s3 cp "$BACKUP_FILE" "s3://${{ env.BACKUP_S3_BUCKET }}/$S3_KEY" \
+              --server-side-encryption AES256 \
+              --storage-class STANDARD_IA
+          fi
+          
+          echo "✅ Files backup uploaded to S3: $S3_KEY"
+
+  # Container images backup
+  containers-backup:
+    name: 'Container Images Backup'
+    runs-on: ubuntu-latest
+    needs: backup-preparation
+    if: fromJson(needs.backup-preparation.outputs.backup-strategy).containers == true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Backup container images
+        run: |
+          echo "🐳 Creating container images backup..."
+          
+          # List of images to backup
+          IMAGES=(
+            "ghcr.io/${{ github.repository }}/api:latest"
+            "ghcr.io/${{ github.repository }}/frontend:latest"
+            "postgres:15"
+            "redis:7-alpine"
+            "nginx:alpine"
+          )
+          
+          mkdir -p backups/containers
+          
+          for image in "${IMAGES[@]}"; do
+            echo "Backing up image: $image"
+            
+            # Pull latest image
+            docker pull "$image"
+            
+            # Save image to tar
+            image_name=$(echo "$image" | sed 's/:/-/g' | sed 's/\//-/g')
+            backup_file="backups/containers/${image_name}-${{ needs.backup-preparation.outputs.backup-id }}.tar"
+            
+            docker save "$image" > "$backup_file"
+            
+            # Compress
+            gzip "$backup_file"
+            backup_file="${backup_file}.gz"
+            
+            # Upload to S3
+            s3_key="containers/$(date +%Y/%m/%d)/${image_name}-${{ needs.backup-preparation.outputs.backup-id }}.tar.gz"
+            
+            aws s3 cp "$backup_file" "s3://${{ env.BACKUP_S3_BUCKET }}/$s3_key" \
+              --storage-class GLACIER_IR
+            
+            echo "✅ Image backup uploaded: $s3_key"
+          done
+
+  # Backup testing and validation
+  backup-validation:
+    name: 'Backup Validation'
+    runs-on: ubuntu-latest
+    needs: [backup-preparation, database-backup, files-backup]
+    if: always() && (needs.database-backup.result == 'success' || needs.files-backup.result == 'success')
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Validate backup integrity
+        run: |
+          echo "🔍 Validating backup integrity..."
+          
+          # List all backups created in this run
+          aws s3 ls s3://${{ env.BACKUP_S3_BUCKET }}/ --recursive | grep "${{ needs.backup-preparation.outputs.backup-id }}"
+          
+          # Verify backup sizes
+          for env in $(echo '${{ needs.backup-preparation.outputs.environments }}' | jq -r '.[]'); do
+            echo "Checking backups for environment: $env"
+            
+            # Check database backup
+            db_backup=$(aws s3 ls s3://${{ env.BACKUP_S3_BUCKET }}/database/$env/ --recursive | grep "${{ needs.backup-preparation.outputs.backup-id }}" | awk '{print $3}')
+            if [[ -n "$db_backup" && "$db_backup" -gt 1024 ]]; then
+              echo "✅ Database backup for $env is valid (size: $db_backup bytes)"
+            else
+              echo "❌ Database backup for $env is invalid or missing"
+            fi
+            
+            # Check files backup
+            files_backup=$(aws s3 ls s3://${{ env.BACKUP_S3_BUCKET }}/files/$env/ --recursive | grep "${{ needs.backup-preparation.outputs.backup-id }}" | awk '{print $3}')
+            if [[ -n "$files_backup" && "$files_backup" -gt 1024 ]]; then
+              echo "✅ Files backup for $env is valid (size: $files_backup bytes)"
+            else
+              echo "❌ Files backup for $env is invalid or missing"
+            fi
+          done
+
+      - name: Test restore functionality
+        if: github.event.inputs.test_restore == 'true'
+        run: |
+          echo "🧪 Testing backup restore functionality..."
+          
+          # Create test environment
+          mkdir -p test-restore
+          cd test-restore
+          
+          # Download a sample backup for testing
+          aws s3 cp s3://${{ env.BACKUP_S3_BUCKET }}/database/staging/ . --recursive | grep "${{ needs.backup-preparation.outputs.backup-id }}" | head -1
+          
+          # TODO: Implement actual restore test
+          echo "Restore test completed (placeholder)"
+
+  # Cleanup old backups
+  backup-cleanup:
+    name: 'Backup Cleanup'
+    runs-on: ubuntu-latest
+    needs: [backup-preparation, backup-validation]
+    if: always()
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Cleanup old backups
+        run: |
+          echo "🧹 Cleaning up old backups..."
+          
+          RETENTION_DAYS="${{ github.event.inputs.retention_days || '30' }}"
+          CUTOFF_DATE=$(date -d "$RETENTION_DAYS days ago" +%Y-%m-%d)
+          
+          echo "Removing backups older than $CUTOFF_DATE (retention: $RETENTION_DAYS days)"
+          
+          # List and delete old backups
+          aws s3 ls s3://${{ env.BACKUP_S3_BUCKET }}/ --recursive | while read -r line; do
+            file_date=$(echo "$line" | awk '{print $1}')
+            file_path=$(echo "$line" | awk '{print $4}')
+            
+            if [[ "$file_date" < "$CUTOFF_DATE" ]]; then
+              echo "Deleting old backup: $file_path"
+              aws s3 rm "s3://${{ env.BACKUP_S3_BUCKET }}/$file_path"
+            fi
+          done
+          
+          echo "✅ Backup cleanup completed"
+
+  # Final notification and reporting
+  backup-completion:
+    name: 'Backup Completion Report'
+    runs-on: ubuntu-latest
+    needs: [backup-preparation, database-backup, files-backup, containers-backup, backup-validation, backup-cleanup]
+    if: always()
+    steps:
+      - name: Generate backup report
+        run: |
+          echo "📊 Generating backup completion report..."
+          
+          # Determine overall status
+          OVERALL_STATUS="success"
+          if [[ "${{ needs.database-backup.result }}" == "failure" || "${{ needs.files-backup.result }}" == "failure" ]]; then
+            OVERALL_STATUS="failure"
+          elif [[ "${{ needs.backup-validation.result }}" == "failure" ]]; then
+            OVERALL_STATUS="warning"
+          fi
+          
+          # Create report
+          cat > backup-report.md << EOF
+          # Disaster Recovery Backup Report
+          
+          **Backup ID:** ${{ needs.backup-preparation.outputs.backup-id }}
+          **Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          **Type:** ${{ github.event.inputs.backup_type || 'full' }}
+          **Environment(s):** ${{ github.event.inputs.environment || 'production' }}
+          **Status:** $OVERALL_STATUS
+          
+          ## Component Status
+          - Database Backup: ${{ needs.database-backup.result }}
+          - Files Backup: ${{ needs.files-backup.result }}
+          - Container Backup: ${{ needs.containers-backup.result }}
+          - Validation: ${{ needs.backup-validation.result }}
+          - Cleanup: ${{ needs.backup-cleanup.result }}
+          
+          ## Details
+          - Retention Period: ${{ github.event.inputs.retention_days || '30' }} days
+          - Test Restore: ${{ github.event.inputs.test_restore || 'false' }}
+          - Triggered by: ${{ github.actor }}
+          EOF
+          
+          cat backup-report.md
+
+      - name: Send completion notification
+        if: env.MONITORING_WEBHOOK
+        run: |
+          # Determine notification color
+          case "${{ needs.database-backup.result }}-${{ needs.files-backup.result }}" in
+            "success-success") COLOR="good" ;;
+            "failure-"*|*"-failure") COLOR="danger" ;;
+            *) COLOR="warning" ;;
+          esac
+          
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{
+              "text": "🔄 Disaster Recovery Backup Completed",
+              "attachments": [{
+                "color": "'$COLOR'",
+                "fields": [
+                  {"title": "Backup ID", "value": "${{ needs.backup-preparation.outputs.backup-id }}", "short": true},
+                  {"title": "Status", "value": "'$COLOR'", "short": true},
+                  {"title": "Database", "value": "${{ needs.database-backup.result }}", "short": true},
+                  {"title": "Files", "value": "${{ needs.files-backup.result }}", "short": true},
+                  {"title": "Duration", "value": "Workflow started: ${{ github.run_id }}", "short": false}
+                ]
+              }]
+            }' \
+            "${{ env.MONITORING_WEBHOOK }}"

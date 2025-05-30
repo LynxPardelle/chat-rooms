@@ -1,0 +1,55 @@
+{
+  "name": "chat-rooms",
+  "version": "1.0.0",
+  "description": "Real-time chat application with Vue 3, NestJS, MongoDB, and Socket.io",
+  "private": true,
+  "workspaces": [
+    "api",
+    "front"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:front\"",
+    "dev:api": "cd api && npm run start:dev",
+    "dev:front": "cd front && npm run dev",
+    "build": "npm run build:api && npm run build:front",
+    "build:api": "cd api && npm run build",
+    "build:front": "cd front && npm run build",
+    "test": "npm run test:api && npm run test:front",
+    "test:api": "cd api && npm test",
+    "test:front": "cd front && npm test",
+    "lint": "npm run lint:api && npm run lint:front",
+    "lint:api": "cd api && npm run lint",
+    "lint:front": "cd front && npm run lint",
+    "clean": "rimraf **/node_modules **/.turbo **/.next **/.vite **/.nuxt **/dist **/build",
+    "setup": "npm run setup:api && npm run setup:front",
+    "setup:api": "cd api && npm install",
+    "setup:front": "cd front && npm install",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart",
+    "docker:clean": "docker-compose down -v"
+  },
+  "keywords": [
+    "vue",
+    "nestjs",
+    "mongodb",
+    "socket.io",
+    "chat",
+    "realtime"
+  ],
+  "author": "LynxPardelle",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=7.0.0"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.8.1"
+  }
+}

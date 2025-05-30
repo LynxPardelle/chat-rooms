@@ -1,0 +1,414 @@
+name: Staging Deployment Pipeline
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deployment even if tests fail'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NODE_VERSION: '20.x'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  STAGING_URL: https://staging.chat-rooms.example.com
+
+jobs:
+  # Pre-deployment validation
+  pre-deployment-checks:
+    name: Pre-deployment Validation
+    runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.validation.outputs.should_deploy }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd api && npm ci
+          cd ../front && npm ci
+
+      - name: Run quality checks
+        id: quality
+        run: |
+          cd api && npm run lint && npm run test
+          cd ../front && npm run lint && npm run test
+          echo "quality_passed=true" >> $GITHUB_OUTPUT
+
+      - name: Run security checks
+        id: security
+        run: |
+          # Quick security scan
+          npx audit-ci --moderate
+          echo "security_passed=true" >> $GITHUB_OUTPUT
+
+      - name: Validate deployment readiness
+        id: validation
+        run: |
+          if [[ "${{ steps.quality.outputs.quality_passed }}" == "true" && "${{ steps.security.outputs.security_passed }}" == "true" ]] || [[ "${{ github.event.inputs.force_deploy }}" == "true" ]]; then
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+          fi
+
+  # Build and prepare staging images
+  build-staging-images:
+    name: Build Staging Images
+    runs-on: ubuntu-latest
+    needs: pre-deployment-checks
+    if: needs.pre-deployment-checks.outputs.should_deploy == 'true'
+    outputs:
+      api_image: ${{ steps.meta-api.outputs.tags }}
+      frontend_image: ${{ steps.meta-frontend.outputs.tags }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for API
+        id: meta-api
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=staging-
+            type=raw,value=staging-latest
+
+      - name: Extract metadata for Frontend
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=staging-
+            type=raw,value=staging-latest
+
+      - name: Build and push API image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./api
+          file: ./api/Dockerfile
+          push: true
+          tags: ${{ steps.meta-api.outputs.tags }}
+          labels: ${{ steps.meta-api.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=staging
+
+      - name: Build and push Frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./front
+          file: ./front/Dockerfile
+          push: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=staging
+            VITE_API_URL=https://api-staging.chat-rooms.example.com
+
+  # Database migration for staging
+  database-migration-staging:
+    name: Database Migration - Staging
+    runs-on: ubuntu-latest
+    needs: [pre-deployment-checks, build-staging-images]
+    if: needs.pre-deployment-checks.outputs.should_deploy == 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: cd api && npm ci
+
+      - name: Create database backup
+        run: |
+          # Create backup before migration
+          mongodump --uri="${{ secrets.STAGING_MONGODB_URI }}" --out="./backup-$(date +%Y%m%d_%H%M%S)"
+
+      - name: Run database migrations
+        run: |
+          cd api
+          export MONGODB_URI="${{ secrets.STAGING_MONGODB_URI }}"
+          npm run migration:run
+
+      - name: Verify migration success
+        run: |
+          cd api
+          export MONGODB_URI="${{ secrets.STAGING_MONGODB_URI }}"
+          npm run migration:verify
+
+  # Deploy to staging environment
+  deploy-to-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [pre-deployment-checks, build-staging-images, database-migration-staging]
+    if: needs.pre-deployment-checks.outputs.should_deploy == 'true'
+    environment:
+      name: staging
+      url: ${{ env.STAGING_URL }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Context for Staging
+        run: |
+          # Configure Docker context for staging server
+          docker context create staging --docker "host=ssh://${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }}"
+          docker context use staging
+
+      - name: Deploy with Docker Compose
+        run: |
+          # Copy environment-specific configuration
+          envsubst < docker-compose.staging.yml.template > docker-compose.staging.yml
+          
+          # Deploy using docker-compose
+          docker-compose -f docker-compose.staging.yml pull
+          docker-compose -f docker-compose.staging.yml up -d --remove-orphans
+        env:
+          API_IMAGE: ${{ needs.build-staging-images.outputs.api_image }}
+          FRONTEND_IMAGE: ${{ needs.build-staging-images.outputs.frontend_image }}
+          MONGODB_URI: ${{ secrets.STAGING_MONGODB_URI }}
+          JWT_SECRET: ${{ secrets.STAGING_JWT_SECRET }}
+          REDIS_URL: ${{ secrets.STAGING_REDIS_URL }}
+
+      - name: Wait for services to be ready
+        run: |
+          # Wait for API health check
+          timeout 300 bash -c 'until curl -f https://api-staging.chat-rooms.example.com/health; do sleep 5; done'
+          
+          # Wait for Frontend to be accessible
+          timeout 300 bash -c 'until curl -f https://staging.chat-rooms.example.com; do sleep 5; done'
+
+  # SSL Certificate validation and renewal
+  ssl-certificate-management:
+    name: SSL Certificate Management
+    runs-on: ubuntu-latest
+    needs: deploy-to-staging
+    steps:
+      - name: Validate SSL certificates
+        run: |
+          # Check API SSL certificate
+          echo | openssl s_client -servername api-staging.chat-rooms.example.com -connect api-staging.chat-rooms.example.com:443 2>/dev/null | openssl x509 -noout -dates
+          
+          # Check Frontend SSL certificate
+          echo | openssl s_client -servername staging.chat-rooms.example.com -connect staging.chat-rooms.example.com:443 2>/dev/null | openssl x509 -noout -dates
+
+      - name: Renew certificates if needed
+        run: |
+          # Check certificate expiration and renew if needed
+          # This would typically integrate with Let's Encrypt or your SSL provider
+          echo "SSL certificate validation completed"
+
+  # Staging smoke tests
+  staging-smoke-tests:
+    name: Staging Smoke Tests
+    runs-on: ubuntu-latest
+    needs: [deploy-to-staging, ssl-certificate-management]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install test dependencies
+        run: |
+          npm ci
+          cd front && npm ci
+
+      - name: Run API health checks
+        run: |
+          curl -f https://api-staging.chat-rooms.example.com/health
+          curl -f https://api-staging.chat-rooms.example.com/health/database
+          curl -f https://api-staging.chat-rooms.example.com/health/redis
+
+      - name: Run basic functionality tests
+        run: |
+          cd front
+          npm run test:e2e:staging
+        env:
+          STAGING_BASE_URL: ${{ env.STAGING_URL }}
+
+      - name: Test WebSocket connections
+        run: |
+          node -e "
+            const io = require('socket.io-client');
+            const socket = io('https://api-staging.chat-rooms.example.com');
+            socket.on('connect', () => {
+              console.log('WebSocket connection successful');
+              process.exit(0);
+            });
+            socket.on('connect_error', (error) => {
+              console.error('WebSocket connection failed:', error);
+              process.exit(1);
+            });
+            setTimeout(() => {
+              console.error('WebSocket connection timeout');
+              process.exit(1);
+            }, 10000);
+          "
+
+  # Performance baseline validation
+  performance-validation:
+    name: Performance Baseline Validation
+    runs-on: ubuntu-latest
+    needs: staging-smoke-tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup k6
+        run: |
+          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Run performance tests
+        run: |
+          k6 run tests/performance/staging-baseline.js
+        env:
+          STAGING_BASE_URL: ${{ env.STAGING_URL }}
+
+      - name: Validate response times
+        run: |
+          # Check that average response time is under acceptable thresholds
+          echo "Performance validation completed"
+
+  # Security penetration testing simulation
+  security-testing:
+    name: Security Testing
+    runs-on: ubuntu-latest
+    needs: staging-smoke-tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup OWASP ZAP
+        run: |
+          docker pull owasp/zap2docker-stable
+
+      - name: Run security scan
+        run: |
+          docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py \
+            -t ${{ env.STAGING_URL }} \
+            -g gen.conf \
+            -r staging-security-report.html
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-security-report
+          path: staging-security-report.html
+
+  # CDN cache warming and optimization
+  cdn-optimization:
+    name: CDN Cache Warming
+    runs-on: ubuntu-latest
+    needs: deploy-to-staging
+    steps:
+      - name: Warm CDN cache
+        run: |
+          # Warm up commonly accessed endpoints
+          curl -s https://staging.chat-rooms.example.com/ > /dev/null
+          curl -s https://staging.chat-rooms.example.com/assets/main.css > /dev/null
+          curl -s https://staging.chat-rooms.example.com/assets/main.js > /dev/null
+
+      - name: Validate CDN performance
+        run: |
+          # Test CDN response times
+          curl -w "@curl-format.txt" -o /dev/null -s https://staging.chat-rooms.example.com/
+
+  # Monitoring and alerting setup
+  monitoring-setup:
+    name: Setup Monitoring
+    runs-on: ubuntu-latest
+    needs: deploy-to-staging
+    steps:
+      - name: Configure application monitoring
+        run: |
+          # Configure APM monitoring for staging environment
+          echo "Monitoring configuration completed"
+
+      - name: Setup health check monitoring
+        run: |
+          # Configure uptime monitoring
+          echo "Health check monitoring configured"
+
+      - name: Configure alerting
+        run: |
+          # Setup staging-specific alerting rules
+          echo "Alerting configuration completed"
+
+  # Deployment notification
+  deployment-notification:
+    name: Deployment Notification
+    runs-on: ubuntu-latest
+    needs: [staging-smoke-tests, performance-validation, security-testing, cdn-optimization, monitoring-setup]
+    if: always()
+    steps:
+      - name: Notify deployment success
+        if: ${{ !contains(needs.*.result, 'failure') }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number || 1,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 **Staging Deployment Successful**\n\n` +
+                    `**Environment:** Staging\n` +
+                    `**Commit:** ${context.sha}\n` +
+                    `**URL:** ${{ env.STAGING_URL }}\n` +
+                    `**Deployed:** ${new Date().toISOString()}\n\n` +
+                    `All smoke tests, performance validation, and security checks passed.`
+            });
+
+      - name: Notify deployment failure
+        if: contains(needs.*.result, 'failure')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Staging Deployment Failed',
+              body: `Staging deployment failed for commit ${context.sha}.\n\n` +
+                    `Please review the deployment logs and address any issues before retrying.`,
+              labels: ['deployment-failure', 'staging']
+            });

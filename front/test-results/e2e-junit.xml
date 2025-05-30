@@ -1,0 +1,1118 @@
+<testsuites id="" name="" tests="264" failures="0" skipped="264" errors="0" time="0.35289100000000007">
+<testsuite name="auth.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="chromium" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Authentication Flow › User Registration › should successfully register a new user" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should show validation errors for invalid registration data" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should prevent registration with existing email" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should validate password strength requirements" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should successfully login with valid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should show error for invalid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should validate required fields" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should handle network errors gracefully" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should maintain session across page reloads" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should successfully logout" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should redirect to login when accessing protected routes without authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should handle expired tokens" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should switch between login and register forms" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should maintain form data when switching tabs" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should store JWT token after successful login" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should include JWT token in WebSocket authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should support keyboard navigation" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should have proper ARIA labels and roles" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="chat.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="chromium" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Chat Functionality › should send and receive messages" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle multiple users in chat" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle connection status" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="cross-platform.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="chromium" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Cross-Platform Compatibility › should work on chromium" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on firefox" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on webkit" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPhone Safari" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on Android Chrome" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPad" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different screen resolutions" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different user agents" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work with keyboard navigation" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="chromium" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Performance Tests › should handle rapid message sending" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle large message content" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain performance with message history" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle WebSocket reconnection efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle concurrent users efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should load page efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle scroll performance with many messages" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain memory usage within limits" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="profile.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="chromium" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Profile Management › should display user profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should handle avatar upload" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should manage notification preferences" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should change password" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update theme settings" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="auth.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="firefox" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Authentication Flow › User Registration › should successfully register a new user" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should show validation errors for invalid registration data" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should prevent registration with existing email" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should validate password strength requirements" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should successfully login with valid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should show error for invalid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should validate required fields" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should handle network errors gracefully" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should maintain session across page reloads" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should successfully logout" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should redirect to login when accessing protected routes without authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should handle expired tokens" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should switch between login and register forms" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should maintain form data when switching tabs" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should store JWT token after successful login" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should include JWT token in WebSocket authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should support keyboard navigation" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should have proper ARIA labels and roles" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="chat.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="firefox" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Chat Functionality › should send and receive messages" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle multiple users in chat" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle connection status" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="cross-platform.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="firefox" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Cross-Platform Compatibility › should work on chromium" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on firefox" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on webkit" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPhone Safari" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on Android Chrome" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPad" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different screen resolutions" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different user agents" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work with keyboard navigation" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="firefox" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Performance Tests › should handle rapid message sending" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle large message content" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain performance with message history" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle WebSocket reconnection efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle concurrent users efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should load page efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle scroll performance with many messages" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain memory usage within limits" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="profile.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="firefox" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Profile Management › should display user profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should handle avatar upload" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should manage notification preferences" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should change password" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update theme settings" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="auth.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="webkit" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Authentication Flow › User Registration › should successfully register a new user" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should show validation errors for invalid registration data" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should prevent registration with existing email" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should validate password strength requirements" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should successfully login with valid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should show error for invalid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should validate required fields" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should handle network errors gracefully" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should maintain session across page reloads" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should successfully logout" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should redirect to login when accessing protected routes without authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should handle expired tokens" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should switch between login and register forms" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should maintain form data when switching tabs" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should store JWT token after successful login" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should include JWT token in WebSocket authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should support keyboard navigation" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should have proper ARIA labels and roles" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="chat.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Chat Functionality › should send and receive messages" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle multiple users in chat" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle connection status" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="cross-platform.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="webkit" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Cross-Platform Compatibility › should work on chromium" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on firefox" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on webkit" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPhone Safari" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on Android Chrome" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPad" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different screen resolutions" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different user agents" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work with keyboard navigation" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="webkit" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Performance Tests › should handle rapid message sending" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle large message content" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain performance with message history" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle WebSocket reconnection efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle concurrent users efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should load page efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle scroll performance with many messages" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain memory usage within limits" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="profile.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="webkit" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Profile Management › should display user profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should handle avatar upload" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should manage notification preferences" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should change password" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update theme settings" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="auth.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="mobile-chrome" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Authentication Flow › User Registration › should successfully register a new user" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should show validation errors for invalid registration data" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should prevent registration with existing email" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should validate password strength requirements" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should successfully login with valid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should show error for invalid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should validate required fields" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should handle network errors gracefully" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should maintain session across page reloads" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should successfully logout" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should redirect to login when accessing protected routes without authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should handle expired tokens" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should switch between login and register forms" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should maintain form data when switching tabs" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should store JWT token after successful login" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should include JWT token in WebSocket authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should support keyboard navigation" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should have proper ARIA labels and roles" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="chat.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="mobile-chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Chat Functionality › should send and receive messages" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle multiple users in chat" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle connection status" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="cross-platform.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="mobile-chrome" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Cross-Platform Compatibility › should work on chromium" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on firefox" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on webkit" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPhone Safari" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on Android Chrome" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPad" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different screen resolutions" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different user agents" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work with keyboard navigation" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="mobile-chrome" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Performance Tests › should handle rapid message sending" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle large message content" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain performance with message history" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle WebSocket reconnection efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle concurrent users efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should load page efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle scroll performance with many messages" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain memory usage within limits" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="profile.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="mobile-chrome" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Profile Management › should display user profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should handle avatar upload" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should manage notification preferences" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should change password" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update theme settings" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="auth.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="mobile-safari" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Authentication Flow › User Registration › should successfully register a new user" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should show validation errors for invalid registration data" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should prevent registration with existing email" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should validate password strength requirements" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should successfully login with valid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should show error for invalid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should validate required fields" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should handle network errors gracefully" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should maintain session across page reloads" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should successfully logout" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should redirect to login when accessing protected routes without authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should handle expired tokens" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should switch between login and register forms" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should maintain form data when switching tabs" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should store JWT token after successful login" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should include JWT token in WebSocket authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should support keyboard navigation" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should have proper ARIA labels and roles" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="chat.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="mobile-safari" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Chat Functionality › should send and receive messages" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle multiple users in chat" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle connection status" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="cross-platform.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="mobile-safari" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Cross-Platform Compatibility › should work on chromium" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on firefox" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on webkit" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPhone Safari" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on Android Chrome" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPad" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different screen resolutions" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different user agents" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work with keyboard navigation" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="mobile-safari" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Performance Tests › should handle rapid message sending" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle large message content" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain performance with message history" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle WebSocket reconnection efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle concurrent users efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should load page efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle scroll performance with many messages" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain memory usage within limits" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="profile.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="mobile-safari" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Profile Management › should display user profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should handle avatar upload" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should manage notification preferences" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should change password" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update theme settings" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="auth.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="authenticated" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Authentication Flow › User Registration › should successfully register a new user" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should show validation errors for invalid registration data" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should prevent registration with existing email" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Registration › should validate password strength requirements" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should successfully login with valid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should show error for invalid credentials" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should validate required fields" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › User Login › should handle network errors gracefully" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should maintain session across page reloads" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should successfully logout" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should redirect to login when accessing protected routes without authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Session Management › should handle expired tokens" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should switch between login and register forms" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Form Navigation › should maintain form data when switching tabs" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should store JWT token after successful login" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › JWT Token Handling › should include JWT token in WebSocket authentication" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should support keyboard navigation" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication Flow › Accessibility › should have proper ARIA labels and roles" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="chat.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="authenticated" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Chat Functionality › should send and receive messages" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle multiple users in chat" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Functionality › should handle connection status" classname="chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="cross-platform.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="authenticated" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Cross-Platform Compatibility › should work on chromium" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on firefox" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on webkit" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPhone Safari" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on Android Chrome" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work on iPad" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different screen resolutions" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should handle different user agents" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Cross-Platform Compatibility › should work with keyboard navigation" classname="cross-platform.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="authenticated" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Performance Tests › should handle rapid message sending" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle large message content" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain performance with message history" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle WebSocket reconnection efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle concurrent users efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should load page efficiently" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle scroll performance with many messages" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain memory usage within limits" classname="performance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="profile.spec.ts" timestamp="2025-05-28T08:20:37.808Z" hostname="authenticated" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Profile Management › should display user profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update profile information" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should handle avatar upload" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should manage notification preferences" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should change password" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Profile Management › should update theme settings" classname="profile.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

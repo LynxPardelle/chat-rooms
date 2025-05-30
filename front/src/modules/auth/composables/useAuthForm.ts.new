@@ -1,0 +1,379 @@
+/**
+ * Auth Form Composable
+ * Advanced reactive form management for authentication
+ */
+
+import { ref, reactive, computed, watch, nextTick } from 'vue';
+import { authService } from '@/core/services/auth.service';
+import { errorService } from '@/core/services/error.service';
+import type {
+  AuthFormState,
+  AuthFormErrors,
+  AuthUIState,
+  AuthFormConfig,
+  AuthFormComposable,
+  LoginFormData,
+  RegisterFormData,
+  ValidationResult,
+  FormFieldEvent,
+  FormSubmitEvent
+} from '../types/auth-module.types';
+import {
+  validateLoginForm,
+  validateRegisterForm,
+  hasErrors,
+  clearFieldError
+} from '../validators/auth.validators';
+
+// Default configuration
+const AUTH_FORM_DEFAULTS: AuthFormConfig = {
+  validateOnChange: true,
+  validateOnBlur: true,
+  debounceMs: 300,
+  showPasswordStrength: true,
+  enableAutoComplete: true,
+  rememberUser: false
+};
+
+/**
+ * Advanced composable for authentication form management
+ * Provides reactive form state, validation, and submission handling
+ */
+export function useAuthForm<T extends Record<string, any>>(
+  initialData: T,
+  validator: (data: T) => AuthFormErrors,
+  config: Partial<AuthFormConfig> = {}
+): AuthFormComposable<T> {
+  // Configuration with defaults
+  const formConfig = reactive({ ...AUTH_FORM_DEFAULTS, ...config });
+  
+  // Reactive form data
+  const formData = ref<T>({ ...initialData });
+  const errors = ref<AuthFormErrors>({});
+  const touched = ref<Record<keyof T, boolean>>(
+    Object.keys(initialData).reduce((acc, key) => {
+      acc[key as keyof T] = false;
+      return acc;
+    }, {} as Record<keyof T, boolean>)
+  );
+  
+  // Form control state
+  const isSubmitting = ref(false);
+  const isDirty = ref(false);
+  
+  // UI state
+  const uiState = reactive<AuthUIState>({
+    loading: false,
+    success: false,
+    error: null,
+    validating: false
+  });
+
+  // Computed properties
+  const isValid = computed(() => {
+    return Object.keys(errors.value).length === 0;
+  });
+
+  const hasChanges = computed(() => {
+    return JSON.stringify(formData.value) !== JSON.stringify(initialData);
+  });
+
+  // Validation timer for debouncing
+  let validationTimer: NodeJS.Timeout | null = null;
+
+  /**
+   * Validate form data with debouncing
+   */
+  const validateForm = () => {
+    if (validationTimer) {
+      clearTimeout(validationTimer);
+    }
+
+    validationTimer = setTimeout(() => {
+      uiState.validating = true;
+      
+      try {
+        const validationErrors = validator(formData.value);
+        errors.value = validationErrors;
+        isDirty.value = hasChanges.value;
+      } catch (error) {
+        console.error('Validation error:', error);
+        errors.value = { general: 'Validation failed. Please try again.' };
+      } finally {
+        uiState.validating = false;
+      }
+    }, formConfig.debounceMs);
+  };
+
+  /**
+   * Validate a specific field
+   */
+  const validateField = (fieldName: keyof T, value: any) => {
+    const fieldData = { ...formData.value, [fieldName]: value };
+    const fieldErrors = validator(fieldData);
+    
+    if (fieldErrors[fieldName as string]) {
+      errors.value[fieldName as string] = fieldErrors[fieldName as string];
+    } else {
+      delete errors.value[fieldName as string];
+    }
+    
+    touched.value[fieldName] = true;
+  };
+
+  /**
+   * Update field value with optional validation
+   */
+  const updateField = (fieldName: keyof T, value: any) => {
+    formData.value[fieldName] = value;
+    touched.value[fieldName] = true;
+    isDirty.value = true;
+
+    if (formConfig.validateOnChange) {
+      validateField(fieldName, value);
+    }
+  };
+
+  /**
+   * Handle field blur event
+   */
+  const handleFieldBlur = (fieldName: keyof T) => {
+    touched.value[fieldName] = true;
+    
+    if (formConfig.validateOnBlur) {
+      validateField(fieldName, formData.value[fieldName]);
+    }
+  };
+
+  /**
+   * Clear field error
+   */
+  const clearError = (fieldName: keyof T) => {
+    delete errors.value[fieldName as string];
+  };
+
+  /**
+   * Clear all errors
+   */
+  const clearAllErrors = () => {
+    errors.value = {};
+    uiState.error = null;
+  };
+
+  /**
+   * Reset form to initial state
+   */
+  const resetForm = () => {
+    formData.value = { ...initialData };
+    errors.value = {};
+    touched.value = Object.keys(initialData).reduce((acc, key) => {
+      acc[key as keyof T] = false;
+      return acc;
+    }, {} as Record<keyof T, boolean>);
+    isDirty.value = false;
+    isSubmitting.value = false;
+    uiState.loading = false;
+    uiState.success = false;
+    uiState.error = null;
+    uiState.validating = false;
+  };
+
+  /**
+   * Set form data programmatically
+   */
+  const setFormData = (newData: Partial<T>) => {
+    Object.assign(formData.value, newData);
+    isDirty.value = hasChanges.value;
+    
+    if (formConfig.validateOnChange) {
+      validateForm();
+    }
+  };
+
+  // Watch for form data changes
+  watch(
+    () => formData.value,
+    () => {
+      isDirty.value = hasChanges.value;
+      if (formConfig.validateOnChange) {
+        validateForm();
+      }
+    },
+    { deep: true }
+  );
+
+  // Return the composable interface
+  return {
+    // Reactive data
+    formData,
+    errors,
+    touched,
+    isValid,
+    isSubmitting,
+    isDirty,
+    hasChanges,
+    uiState,
+    formConfig,
+
+    // Methods
+    updateField,
+    validateField,
+    validateForm,
+    handleFieldBlur,
+    clearError,
+    clearAllErrors,
+    resetForm,
+    setFormData
+  };
+}
+
+// =====================================
+// Specialized Auth Form Composables
+// =====================================
+
+/**
+ * Login form composable
+ */
+export function useLoginForm() {
+  const form = useAuthForm<LoginFormData>(
+    {
+      username: '',
+      password: '',
+      rememberMe: false
+    },
+    validateLoginForm,
+    {
+      validateOnChange: true,
+      validateOnBlur: true,
+      debounceMs: 300,
+      enableAutoComplete: true
+    }
+  );
+
+  /**
+   * Submit login form
+   */
+  const submitLogin = async (): Promise<void> => {
+    try {
+      isSubmitting.value = true;
+      form.uiState.loading = true;
+      form.uiState.error = null;
+
+      // Final validation
+      form.validateForm();
+      await nextTick();
+
+      if (!form.isValid.value) {
+        throw new Error('Please fix form errors before submitting');
+      }
+
+      // Submit to auth service
+      const response = await authService.login({
+        username: form.formData.value.username,
+        password: form.formData.value.password,
+        rememberMe: form.formData.value.rememberMe
+      });
+
+      if (response.success) {
+        form.uiState.success = true;
+        // The auth service should handle token storage and user state updates
+      } else {
+        throw new Error(response.error || 'Login failed');
+      }
+
+    } catch (error: any) {
+      console.error('Login error:', error);
+      const apiError = errorService.handleApiError(error);
+      form.uiState.error = apiError.message;
+      
+      // Handle specific error cases
+      if (errorService.isAuthError(error)) {
+        form.errors.value.general = 'Invalid username or password';
+      }
+    } finally {
+      form.isSubmitting.value = false;
+      form.uiState.loading = false;
+    }
+  };
+
+  return {
+    ...form,
+    submitLogin
+  };
+}
+
+/**
+ * Register form composable
+ */
+export function useRegisterForm() {
+  const form = useAuthForm<RegisterFormData>(
+    {
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      displayName: '',
+      acceptTerms: false
+    },
+    validateRegisterForm,
+    {
+      validateOnChange: true,
+      validateOnBlur: true,
+      debounceMs: 300,
+      showPasswordStrength: true,
+      enableAutoComplete: false
+    }
+  );
+
+  /**
+   * Submit registration form
+   */
+  const submitRegister = async (): Promise<void> => {
+    try {
+      form.isSubmitting.value = true;
+      form.uiState.loading = true;
+      form.uiState.error = null;
+
+      // Final validation
+      form.validateForm();
+      await nextTick();
+
+      if (!form.isValid.value) {
+        throw new Error('Please fix form errors before submitting');
+      }
+
+      // Submit to auth service
+      const response = await authService.register({
+        username: form.formData.value.username,
+        email: form.formData.value.email,
+        password: form.formData.value.password,
+        displayName: form.formData.value.displayName
+      });
+
+      if (response.success) {
+        form.uiState.success = true;
+        // Handle successful registration (e.g., show verification message)
+      } else {
+        throw new Error(response.error || 'Registration failed');
+      }
+
+    } catch (error: any) {
+      console.error('Registration error:', error);
+      const apiError = errorService.handleApiError(error);
+      form.uiState.error = apiError.message;
+      
+      // Handle specific error cases
+      if (error.response?.status === 409) {
+        form.errors.value.username = 'Username already exists';
+      }
+    } finally {
+      form.isSubmitting.value = false;
+      form.uiState.loading = false;
+    }
+  };
+
+  return {
+    ...form,
+    submitRegister
+  };
+}

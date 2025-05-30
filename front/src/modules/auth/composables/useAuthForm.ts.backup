@@ -1,0 +1,353 @@
+/**
+ * Auth Form Composable
+ * Manejo reactivo de formularios de autenticación
+ */
+
+import { reactive, computed, watch, readonly } from 'vue';
+import { AuthService } from '@/core/services/auth.service';
+import { ErrorService } from '@/core/services/error.service';
+import type {
+  AuthFormState,
+  AuthFormErrors,
+  AuthUIState,
+  AuthFormConfig,
+  AuthModuleResponse,
+  LoginFormData,
+  RegisterFormData
+} from '../types/auth-module.types';
+import { AUTH_FORM_DEFAULTS } from '../types/auth-module.types';
+import {
+  validateLoginForm,
+  validateRegisterForm,
+  hasErrors,
+  clearFieldError
+} from '../validators/auth.validators';
+
+// =====================================
+// Base Form Composable
+// =====================================
+
+export function useAuthForm<T extends Record<string, any>>(
+  initialData: T,
+  validator: (data: T) => AuthFormErrors,
+  config: Partial<AuthFormConfig> = {}
+) {
+  // Configuration with defaults
+  const formConfig = reactive({ ...AUTH_FORM_DEFAULTS, ...config });
+  
+  // Form state
+  const formState = reactive<AuthFormState<T>>({
+    data: reactive({ ...initialData }),
+    isSubmitting: false,
+    isDirty: false,
+    isValid: false,
+    errors: {},
+    touched: reactive(Object.keys(initialData).reduce((acc, key) => {
+      acc[key as keyof T] = false;
+      return acc;
+    }, {} as Record<keyof T, boolean>))
+  });
+
+  // UI state
+  const uiState = reactive<AuthUIState>({
+    loading: false,
+    success: false,
+    error: null,
+    validating: false
+  });
+
+  // Validation timer for debounce
+  let validationTimer: number | null = null;
+
+  // =====================================
+  // Computed Properties
+  // =====================================
+
+  const hasFormErrors = computed(() => hasErrors(formState.errors));
+  
+  const canSubmit = computed(() => 
+    !formState.isSubmitting && 
+    !hasFormErrors.value && 
+    formState.isDirty && 
+    !uiState.validating
+  );
+
+  const formattedErrors = computed(() => {
+    const formatted: Record<string, string> = {};
+    Object.entries(formState.errors).forEach(([key, error]) => {
+      if (error) {
+        formatted[key] = Array.isArray(error) ? error[0] : error;
+      }
+    });
+    return formatted;
+  });
+
+  // =====================================
+  // Methods
+  // =====================================
+
+  const validateForm = () => {
+    if (!formConfig.enableValidation) return;
+    
+    uiState.validating = true;
+    formState.errors = validator(formState.data as T);
+    formState.isValid = !hasErrors(formState.errors);
+    uiState.validating = false;
+  };
+
+  const validateField = (field: keyof T) => {
+    if (!formConfig.enableValidation) return;
+
+    // Clear existing validation timer
+    if (validationTimer) {
+      clearTimeout(validationTimer);
+    }
+
+    // Debounced validation
+    validationTimer = window.setTimeout(() => {
+      const fieldErrors = validator(formState.data as T);
+      formState.errors = clearFieldError(formState.errors, field as string);
+      
+      if (fieldErrors[field as string]) {
+        formState.errors[field as string] = fieldErrors[field as string];
+      }
+      
+      formState.isValid = !hasErrors(formState.errors);
+    }, formConfig.validationDelay);
+  };
+
+  const updateField = (field: keyof T, value: any) => {
+    (formState.data as any)[field] = value;
+    (formState.touched as any)[field] = true;
+    formState.isDirty = true;
+
+    // Clear previous error for this field
+    if (formState.errors[field as string]) {
+      formState.errors = clearFieldError(formState.errors, field as string);
+    }
+
+    // Trigger field validation
+    if (formConfig.enableValidation) {
+      validateField(field);
+    }
+  };
+
+  const resetForm = () => {
+    Object.assign(formState.data, initialData);
+    formState.isSubmitting = false;
+    formState.isDirty = false;
+    formState.isValid = false;
+    formState.errors = {};
+    Object.keys(initialData).forEach(key => {
+      (formState.touched as any)[key] = false;
+    });
+
+    uiState.loading = false;
+    uiState.success = false;
+    uiState.error = null;
+    uiState.validating = false;
+  };
+
+  const setError = (field: string, error: string) => {
+    formState.errors[field] = error;
+    formState.isValid = false;
+  };
+
+  const setFormError = (error: string) => {
+    uiState.error = error;
+    uiState.success = false;
+  };
+
+  const setSuccess = (message?: string) => {
+    uiState.success = true;
+    uiState.error = null;
+    if (message) {
+      // Could show success toast here
+      console.log('Success:', message);
+    }
+  };
+
+  // =====================================
+  // Watchers
+  // =====================================
+
+  // Watch for form changes to update dirty state
+  watch(
+    () => formState.data,
+    () => {
+      const isDirty = Object.keys(initialData).some(
+        key => (formState.data as any)[key] !== (initialData as any)[key]
+      );
+      formState.isDirty = isDirty;
+    },
+    { deep: true }
+  );
+
+  return {
+    // State
+    formState: readonly(formState),
+    uiState: readonly(uiState),
+    formConfig,
+    
+    // Computed
+    hasFormErrors,
+    canSubmit,
+    formattedErrors,
+    
+    // Methods
+    validateForm,
+    validateField,
+    updateField,
+    resetForm,
+    setError,
+    setFormError,
+    setSuccess,
+  };
+}
+
+// =====================================
+// Login Form Composable
+// =====================================
+
+export function useLoginForm(config?: Partial<AuthFormConfig>) {
+  const initialData: LoginFormData = {
+    email: '',
+    password: '',
+    rememberMe: false
+  };
+
+  const form = useAuthForm(initialData, validateLoginForm, config);
+  const authService = AuthService.getInstance();
+  const errorService = ErrorService.getInstance();
+
+  const submitLogin = async (): Promise<AuthModuleResponse> => {
+    try {
+      form.formState.isSubmitting = true;
+      form.uiState.loading = true;
+      form.uiState.error = null;
+
+      // Final validation
+      form.validateForm();
+      if (form.hasFormErrors.value) {
+        throw new Error('Formulario contiene errores');
+      }
+
+      // Submit to auth service
+      const response = await authService.login({
+        email: form.formState.data.email,
+        password: form.formState.data.password
+      });
+
+      // AuthService.login returns UserResponse directly on success
+      if (response) {
+        form.setSuccess('Login exitoso');
+        return {
+          success: true,
+          data: response
+        };
+      } else {
+        throw new Error('Error en el login');
+      }
+
+    } catch (error) {
+      const errorMessage = errorService.formatError(error);
+      form.setFormError(errorMessage);
+      
+      return {
+        success: false,
+        error: {
+          code: 'LOGIN_ERROR',
+          message: errorMessage
+        }
+      };
+    } finally {
+      form.formState.isSubmitting = false;
+      form.uiState.loading = false;
+    }
+  };
+
+  return {
+    ...form,
+    submitLogin
+  };
+}
+
+// =====================================
+// Register Form Composable
+// =====================================
+
+export function useRegisterForm(config?: Partial<AuthFormConfig>) {
+  const initialData: RegisterFormData = {
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    acceptTerms: false,
+    textColor: '#333333',
+    backgroundColor: '#ffffff',
+    showColorPreview: false
+  };
+
+  const form = useAuthForm(initialData, validateRegisterForm, config);
+  const authService = AuthService.getInstance();
+  const errorService = ErrorService.getInstance();
+
+  const toggleColorPreview = () => {
+    form.updateField('showColorPreview', !form.formState.data.showColorPreview);
+  };
+
+  const submitRegister = async (): Promise<AuthModuleResponse> => {
+    try {
+      form.formState.isSubmitting = true;
+      form.uiState.loading = true;
+      form.uiState.error = null;
+
+      // Final validation
+      form.validateForm();
+      if (form.hasFormErrors.value) {
+        throw new Error('Formulario contiene errores');
+      }
+
+      // Submit to auth service
+      const response = await authService.register({
+        username: form.formState.data.username,
+        email: form.formState.data.email,
+        password: form.formState.data.password,
+        textColor: form.formState.data.textColor,
+        backgroundColor: form.formState.data.backgroundColor
+      });
+
+      // AuthService.register returns UserResponse directly on success
+      if (response) {
+        form.setSuccess('Registro exitoso');
+        return {
+          success: true,
+          data: response
+        };
+      } else {
+        throw new Error('Error en el registro');
+      }
+
+    } catch (error) {
+      const errorMessage = errorService.formatError(error);
+      form.setFormError(errorMessage);
+      
+      return {
+        success: false,
+        error: {
+          code: 'REGISTER_ERROR',
+          message: errorMessage
+        }
+      };
+    } finally {
+      form.formState.isSubmitting = false;
+      form.uiState.loading = false;
+    }
+  };
+
+  return {
+    ...form,
+    toggleColorPreview,
+    submitRegister
+  };
+}

@@ -1,0 +1,144 @@
+# Prometheus Alerting Rules for Chat Rooms Application
+groups:
+  - name: chat-rooms-alerts
+    rules:
+      # High-Level Application Alerts
+      - alert: HighErrorRate
+        expr: (rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m])) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} for {{ $labels.instance }}"
+
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High response time detected"
+          description: "95th percentile response time is {{ $value }}s for {{ $labels.instance }}"
+
+      # WebSocket Specific Alerts
+      - alert: WebSocketConnectionsHigh
+        expr: websocket_active_connections > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High number of WebSocket connections"
+          description: "{{ $labels.instance }} has {{ $value }} active WebSocket connections"
+
+      - alert: WebSocketMessageQueueHigh
+        expr: websocket_message_queue_size > 10000
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "WebSocket message queue is growing"
+          description: "{{ $labels.instance }} has {{ $value }} messages in queue"
+
+      - alert: WebSocketDisconnectionRate
+        expr: rate(websocket_disconnections_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High WebSocket disconnection rate"
+          description: "{{ $labels.instance }} has {{ $value }} disconnections/sec"
+
+      # Infrastructure Alerts
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.9
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value | humanizePercentage }} on {{ $labels.instance }}"
+
+      - alert: HighCPUUsage
+        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) < 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk space low"
+          description: "Only {{ $value | humanizePercentage }} disk space remaining on {{ $labels.instance }}"
+
+      # Database Alerts
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis is down"
+          description: "Redis instance {{ $labels.instance }} is down"
+
+      - alert: RedisMemoryHigh
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis memory usage high"
+          description: "Redis memory usage is {{ $value | humanizePercentage }} on {{ $labels.instance }}"
+
+      # Load Balancer Alerts
+      - alert: TraefikDown
+        expr: up{job="traefik"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Traefik load balancer is down"
+          description: "Traefik instance {{ $labels.instance }} is down"
+
+      - alert: HighTraefikResponseTime
+        expr: histogram_quantile(0.95, rate(traefik_service_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Traefik response time"
+          description: "95th percentile response time is {{ $value }}s for Traefik"
+
+      # Business Logic Alerts
+      - alert: MessageDeliveryFailureHigh
+        expr: rate(websocket_message_delivery_failures_total[5m]) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High message delivery failure rate"
+          description: "{{ $value }} messages/sec failing to deliver on {{ $labels.instance }}"
+
+      - alert: UserAuthenticationFailureSpike
+        expr: rate(auth_failures_total[5m]) > 5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High authentication failure rate"
+          description: "{{ $value }} auth failures/sec on {{ $labels.instance }}"
+
+      - alert: SecurityScannerDown
+        expr: up{job="security-scanner"} == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Security scanner is down"
+          description: "Security monitoring is offline"

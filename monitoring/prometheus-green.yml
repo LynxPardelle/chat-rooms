@@ -1,0 +1,82 @@
+# Prometheus Configuration for Production Green Environment
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'chat-rooms-production'
+    replica: 'green'
+
+rule_files:
+  - "alert-rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+scrape_configs:
+  # API Services
+  - job_name: 'chat-rooms-api'
+    static_configs:
+      - targets: ['api-green:3000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    params:
+      format: ['prometheus']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: api-green:3001
+  # Redis Monitoring
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-green:6379']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Traefik Load Balancer
+  - job_name: 'traefik'
+    static_configs:
+      - targets: ['traefik-green:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  # Node Exporter (System Metrics)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+
+  # Container Advisor (cAdvisor)
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 15s
+    metrics_path: '/metrics'
+
+  # WebSocket Metrics
+  - job_name: 'websocket-metrics'
+    static_configs:
+      - targets: ['api-green:3000']
+    metrics_path: '/metrics/websocket'
+    scrape_interval: 5s
+    scrape_timeout: 3s
+
+  # Application Performance Monitoring
+  - job_name: 'application-performance'
+    static_configs:
+      - targets: ['api-green:3000']
+    metrics_path: '/metrics/performance'
+    scrape_interval: 10s
+
+  # Business Metrics
+  - job_name: 'business-metrics'
+    static_configs:
+      - targets: ['api-green:3000']
+    metrics_path: '/metrics/business'
+    scrape_interval: 30s

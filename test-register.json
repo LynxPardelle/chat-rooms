@@ -1,0 +1,7 @@
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "testpassword123",
+  "textColor": "#333333",
+  "backgroundColor": "#f0f0f0"
+}

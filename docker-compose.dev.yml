@@ -1,0 +1,135 @@
+services:
+  # MongoDB Service
+  mongo:
+    image: mongo:7.0
+    container_name: chat-rooms-mongo-dev
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data-dev:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=chat-rooms-dev
+    networks:
+      - chat-rooms-network-dev
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Backend Service (NestJS) - Development with hot reload
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: chat-rooms-api-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Debug port
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/chat-rooms-dev
+      - PORT=3001
+      - JWT_SECRET=dev-secret-key-not-for-production
+      - JWT_EXPIRES_IN=1d
+      - JWT_REFRESH_SECRET=dev-refresh-secret-not-for-production
+      - JWT_REFRESH_EXPIRES_IN=7d
+      - CORS_ORIGIN=http://localhost:5173
+      - LOG_LEVEL=debug
+    networks:
+      - chat-rooms-network-dev
+    volumes:
+      - ./api/src:/app/src:ro
+      - ./api/package.json:/app/package.json:ro
+      - ./api/tsconfig.json:/app/tsconfig.json:ro
+      - ./api/nest-cli.json:/app/nest-cli.json:ro
+      - api-node-modules:/app/node_modules
+    command: npm run start:dev
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Frontend Service (Vue 3) - Development with hot reload
+  front:
+    build:
+      context: ./front
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: chat-rooms-front-dev
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      - VITE_API_URL=http://localhost:3001
+      - VITE_SOCKET_URL=http://localhost:3001
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - chat-rooms-network-dev
+    volumes:
+      - ./front/src:/app/src:ro
+      - ./front/public:/app/public:ro
+      - ./front/index.html:/app/index.html:ro
+      - ./front/package.json:/app/package.json:ro
+      - ./front/vite.config.ts:/app/vite.config.ts:ro
+      - ./front/tsconfig.json:/app/tsconfig.json:ro
+      - front-node-modules:/app/node_modules
+    command: npm run dev -- --host 0.0.0.0
+
+  # MongoDB Express (Database Admin Interface)
+  mongo-express:
+    image: mongo-express:latest
+    container_name: chat-rooms-mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
+    networks:
+      - chat-rooms-network-dev
+
+  # Redis for development (caching and session storage)
+  redis:
+    image: redis:7-alpine
+    container_name: chat-rooms-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - chat-rooms-network-dev
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  chat-rooms-network-dev:
+    driver: bridge
+
+volumes:
+  mongo-data-dev:
+    driver: local
+  api-node-modules:
+    driver: local
+  front-node-modules:
+    driver: local

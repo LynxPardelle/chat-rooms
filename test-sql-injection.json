@@ -1,0 +1,5 @@
+{
+  "username": "test'; DROP TABLE users; --",
+  "email": "test@test.com",
+  "password": "password123"
+}

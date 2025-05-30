@@ -1,0 +1,5613 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\lince\\Documents\\GitHub\\chat-rooms\\front\\playwright.config.ts",
+    "rootDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "C:\\Users\\lince\\Documents\\GitHub\\chat-rooms\\front\\tests\\e2e\\utils\\global-setup.ts",
+    "globalTeardown": "C:\\Users\\lince\\Documents\\GitHub\\chat-rooms\\front\\tests\\e2e\\utils\\global-teardown.ts",
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/e2e-results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "test-results/e2e-junit.xml"
+        }
+      ],
+      [
+        "html",
+        {
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "setup",
+        "name": "setup",
+        "testDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/tests/e2e",
+        "testIgnore": [
+          "**/utils/**"
+        ],
+        "testMatch": [
+          "/.*\\.setup\\.ts/"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "cleanup",
+        "name": "cleanup",
+        "testDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/tests/e2e",
+        "testIgnore": [
+          "**/utils/**"
+        ],
+        "testMatch": [
+          "/.*\\.teardown\\.ts/"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/tests/e2e",
+        "testIgnore": [
+          "**/utils/**"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/tests/e2e",
+        "testIgnore": [
+          "**/utils/**"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/tests/e2e",
+        "testIgnore": [
+          "**/utils/**"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "mobile-chrome",
+        "name": "mobile-chrome",
+        "testDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/tests/e2e",
+        "testIgnore": [
+          "**/utils/**"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "mobile-safari",
+        "name": "mobile-safari",
+        "testDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/tests/e2e",
+        "testIgnore": [
+          "**/utils/**"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "authenticated",
+        "name": "authenticated",
+        "testDir": "C:/Users/lince/Documents/GitHub/chat-rooms/front/tests/e2e",
+        "testIgnore": [
+          "**/utils/**"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.52.0",
+    "workers": 4,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:8080",
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "ignore",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "auth.spec.ts",
+      "file": "auth.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Authentication Flow",
+          "file": "auth.spec.ts",
+          "line": 14,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "User Registration",
+              "file": "auth.spec.ts",
+              "line": 23,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should successfully register a new user",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-8429831e6ee69ef8b6ad",
+                  "file": "auth.spec.ts",
+                  "line": 24,
+                  "column": 5
+                },
+                {
+                  "title": "should show validation errors for invalid registration data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-79b16b5d40df8f90bc24",
+                  "file": "auth.spec.ts",
+                  "line": 46,
+                  "column": 5
+                },
+                {
+                  "title": "should prevent registration with existing email",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-15413986e01ef3bc17d8",
+                  "file": "auth.spec.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength requirements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-6895045399518700b5fe",
+                  "file": "auth.spec.ts",
+                  "line": 96,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully register a new user",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-01504d57b4116b4a33f4",
+                  "file": "auth.spec.ts",
+                  "line": 24,
+                  "column": 5
+                },
+                {
+                  "title": "should show validation errors for invalid registration data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-63632d7d262a36481191",
+                  "file": "auth.spec.ts",
+                  "line": 46,
+                  "column": 5
+                },
+                {
+                  "title": "should prevent registration with existing email",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-6f3d0f724e5f3d381776",
+                  "file": "auth.spec.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength requirements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-0990439e9758aa01624b",
+                  "file": "auth.spec.ts",
+                  "line": 96,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully register a new user",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-52d2d86190856081e315",
+                  "file": "auth.spec.ts",
+                  "line": 24,
+                  "column": 5
+                },
+                {
+                  "title": "should show validation errors for invalid registration data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-1609b574f762fd6fa690",
+                  "file": "auth.spec.ts",
+                  "line": 46,
+                  "column": 5
+                },
+                {
+                  "title": "should prevent registration with existing email",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-95b0723af46f83e00b12",
+                  "file": "auth.spec.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength requirements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-18cdb7ef63f02eb746d7",
+                  "file": "auth.spec.ts",
+                  "line": 96,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully register a new user",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-24ef7f692a10a0ddec6b",
+                  "file": "auth.spec.ts",
+                  "line": 24,
+                  "column": 5
+                },
+                {
+                  "title": "should show validation errors for invalid registration data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9b2cb7e8e7916cc0aeef",
+                  "file": "auth.spec.ts",
+                  "line": 46,
+                  "column": 5
+                },
+                {
+                  "title": "should prevent registration with existing email",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9dd45637912d30916f08",
+                  "file": "auth.spec.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength requirements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-fe9c879a79ac5c3662df",
+                  "file": "auth.spec.ts",
+                  "line": 96,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully register a new user",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-4acdb1f723823cc4fe45",
+                  "file": "auth.spec.ts",
+                  "line": 24,
+                  "column": 5
+                },
+                {
+                  "title": "should show validation errors for invalid registration data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-a816e288be8f632ffe45",
+                  "file": "auth.spec.ts",
+                  "line": 46,
+                  "column": 5
+                },
+                {
+                  "title": "should prevent registration with existing email",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-1fc6567097b2c20ccaeb",
+                  "file": "auth.spec.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength requirements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-6844bc99ab209ef5c78b",
+                  "file": "auth.spec.ts",
+                  "line": 96,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully register a new user",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-048fba45b817d77c46ca",
+                  "file": "auth.spec.ts",
+                  "line": 24,
+                  "column": 5
+                },
+                {
+                  "title": "should show validation errors for invalid registration data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-273327e205bc2978d5e7",
+                  "file": "auth.spec.ts",
+                  "line": 46,
+                  "column": 5
+                },
+                {
+                  "title": "should prevent registration with existing email",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-43b558607b890aabd26c",
+                  "file": "auth.spec.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength requirements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-c1b4e0d2d6e9a4400b90",
+                  "file": "auth.spec.ts",
+                  "line": 96,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "User Login",
+              "file": "auth.spec.ts",
+              "line": 118,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should successfully login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9f89919b7dc1e1d85d59",
+                  "file": "auth.spec.ts",
+                  "line": 119,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-c99da273999d0fb166c4",
+                  "file": "auth.spec.ts",
+                  "line": 142,
+                  "column": 5
+                },
+                {
+                  "title": "should validate required fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-945176c17ffbbb06a81b",
+                  "file": "auth.spec.ts",
+                  "line": 155,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-022922da430b5b1695e1",
+                  "file": "auth.spec.ts",
+                  "line": 167,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-2e407d1c6f650c265326",
+                  "file": "auth.spec.ts",
+                  "line": 119,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-c3caf4bcc7f2862242a5",
+                  "file": "auth.spec.ts",
+                  "line": 142,
+                  "column": 5
+                },
+                {
+                  "title": "should validate required fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-505c130e05408fb9f48f",
+                  "file": "auth.spec.ts",
+                  "line": 155,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-3f88460dbae1c4178570",
+                  "file": "auth.spec.ts",
+                  "line": 167,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-48e3520539449e7a0255",
+                  "file": "auth.spec.ts",
+                  "line": 119,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-bd0f8271a9ee9937cc15",
+                  "file": "auth.spec.ts",
+                  "line": 142,
+                  "column": 5
+                },
+                {
+                  "title": "should validate required fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-1dab49ca09fb39ea5f0d",
+                  "file": "auth.spec.ts",
+                  "line": 155,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-32cd06642d57d04a81f2",
+                  "file": "auth.spec.ts",
+                  "line": 167,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-4230f894e09b9ca38ff9",
+                  "file": "auth.spec.ts",
+                  "line": 119,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-1283179a9de0b7599ef3",
+                  "file": "auth.spec.ts",
+                  "line": 142,
+                  "column": 5
+                },
+                {
+                  "title": "should validate required fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-09f757cc1ea4d50cc553",
+                  "file": "auth.spec.ts",
+                  "line": 155,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-4c322c5f476e2d5abc8e",
+                  "file": "auth.spec.ts",
+                  "line": 167,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9684566780a9b6207ccb",
+                  "file": "auth.spec.ts",
+                  "line": 119,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-2bef1b6d5a9218ae892b",
+                  "file": "auth.spec.ts",
+                  "line": 142,
+                  "column": 5
+                },
+                {
+                  "title": "should validate required fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-3c958e4e336fc1083e80",
+                  "file": "auth.spec.ts",
+                  "line": 155,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-4353ece61b8390d4414d",
+                  "file": "auth.spec.ts",
+                  "line": 167,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-099ea138aedeaf9e2a11",
+                  "file": "auth.spec.ts",
+                  "line": 119,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-e8648a7786763ecde7c1",
+                  "file": "auth.spec.ts",
+                  "line": 142,
+                  "column": 5
+                },
+                {
+                  "title": "should validate required fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-dbf8429662123848551e",
+                  "file": "auth.spec.ts",
+                  "line": 155,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-2339a5e73f35c4cda756",
+                  "file": "auth.spec.ts",
+                  "line": 167,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Session Management",
+              "file": "auth.spec.ts",
+              "line": 180,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should maintain session across page reloads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-30c83bf00751cf5e1e86",
+                  "file": "auth.spec.ts",
+                  "line": 181,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully logout",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-e80399d11fbcd03a6e30",
+                  "file": "auth.spec.ts",
+                  "line": 199,
+                  "column": 5
+                },
+                {
+                  "title": "should redirect to login when accessing protected routes without authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-970936aff1d5ad70e9c2",
+                  "file": "auth.spec.ts",
+                  "line": 222,
+                  "column": 5
+                },
+                {
+                  "title": "should handle expired tokens",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-2dbee2781c675fd7d477",
+                  "file": "auth.spec.ts",
+                  "line": 234,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain session across page reloads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-1af49a6e8cb6f27d47be",
+                  "file": "auth.spec.ts",
+                  "line": 181,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully logout",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-08fd8f6a4ced768f320f",
+                  "file": "auth.spec.ts",
+                  "line": 199,
+                  "column": 5
+                },
+                {
+                  "title": "should redirect to login when accessing protected routes without authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-242b6ce7299564ca1b41",
+                  "file": "auth.spec.ts",
+                  "line": 222,
+                  "column": 5
+                },
+                {
+                  "title": "should handle expired tokens",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-0932e52c08e1524ab688",
+                  "file": "auth.spec.ts",
+                  "line": 234,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain session across page reloads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9fba2ed9661b16cdced4",
+                  "file": "auth.spec.ts",
+                  "line": 181,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully logout",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-11af1ceead4568c5efbc",
+                  "file": "auth.spec.ts",
+                  "line": 199,
+                  "column": 5
+                },
+                {
+                  "title": "should redirect to login when accessing protected routes without authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-f1e17235cd06c2879a93",
+                  "file": "auth.spec.ts",
+                  "line": 222,
+                  "column": 5
+                },
+                {
+                  "title": "should handle expired tokens",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-69f4929287c02b3532d7",
+                  "file": "auth.spec.ts",
+                  "line": 234,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain session across page reloads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-d21ddf38238ea67f147e",
+                  "file": "auth.spec.ts",
+                  "line": 181,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully logout",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-ac7e36c883913d17691b",
+                  "file": "auth.spec.ts",
+                  "line": 199,
+                  "column": 5
+                },
+                {
+                  "title": "should redirect to login when accessing protected routes without authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-4b7d3cd68c053590475a",
+                  "file": "auth.spec.ts",
+                  "line": 222,
+                  "column": 5
+                },
+                {
+                  "title": "should handle expired tokens",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-4207e612299410ffb9f3",
+                  "file": "auth.spec.ts",
+                  "line": 234,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain session across page reloads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-6cd5a79849d1bd397a4a",
+                  "file": "auth.spec.ts",
+                  "line": 181,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully logout",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9a3541581f399a0243e5",
+                  "file": "auth.spec.ts",
+                  "line": 199,
+                  "column": 5
+                },
+                {
+                  "title": "should redirect to login when accessing protected routes without authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9a665852ae6594974ee5",
+                  "file": "auth.spec.ts",
+                  "line": 222,
+                  "column": 5
+                },
+                {
+                  "title": "should handle expired tokens",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-396092372a64286cbf9a",
+                  "file": "auth.spec.ts",
+                  "line": 234,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain session across page reloads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-17c674857f8ede30455e",
+                  "file": "auth.spec.ts",
+                  "line": 181,
+                  "column": 5
+                },
+                {
+                  "title": "should successfully logout",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-0df000361c95df9ebb6a",
+                  "file": "auth.spec.ts",
+                  "line": 199,
+                  "column": 5
+                },
+                {
+                  "title": "should redirect to login when accessing protected routes without authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-2e0b384b908c3a8be930",
+                  "file": "auth.spec.ts",
+                  "line": 222,
+                  "column": 5
+                },
+                {
+                  "title": "should handle expired tokens",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-ee1d69242a55166a0889",
+                  "file": "auth.spec.ts",
+                  "line": 234,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Form Navigation",
+              "file": "auth.spec.ts",
+              "line": 257,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should switch between login and register forms",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-62cf62ddd5d747f064ed",
+                  "file": "auth.spec.ts",
+                  "line": 258,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain form data when switching tabs",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-5cebc68f40acccc96b34",
+                  "file": "auth.spec.ts",
+                  "line": 272,
+                  "column": 5
+                },
+                {
+                  "title": "should switch between login and register forms",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-eb2156db10c4dce65228",
+                  "file": "auth.spec.ts",
+                  "line": 258,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain form data when switching tabs",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-ab2c04c44265187de452",
+                  "file": "auth.spec.ts",
+                  "line": 272,
+                  "column": 5
+                },
+                {
+                  "title": "should switch between login and register forms",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-37bca107c8c83cc7113e",
+                  "file": "auth.spec.ts",
+                  "line": 258,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain form data when switching tabs",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-1db49455e3ff0082c70b",
+                  "file": "auth.spec.ts",
+                  "line": 272,
+                  "column": 5
+                },
+                {
+                  "title": "should switch between login and register forms",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-34e448eddc588e8448cf",
+                  "file": "auth.spec.ts",
+                  "line": 258,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain form data when switching tabs",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-5204b13c455fd0c87a5c",
+                  "file": "auth.spec.ts",
+                  "line": 272,
+                  "column": 5
+                },
+                {
+                  "title": "should switch between login and register forms",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-4d0fa812bcf310f32c70",
+                  "file": "auth.spec.ts",
+                  "line": 258,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain form data when switching tabs",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-c50c95f7687f2c97418b",
+                  "file": "auth.spec.ts",
+                  "line": 272,
+                  "column": 5
+                },
+                {
+                  "title": "should switch between login and register forms",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-8a8a26883cd3f676fb49",
+                  "file": "auth.spec.ts",
+                  "line": 258,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain form data when switching tabs",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-f9efcc201091257f88c8",
+                  "file": "auth.spec.ts",
+                  "line": 272,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "JWT Token Handling",
+              "file": "auth.spec.ts",
+              "line": 289,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should store JWT token after successful login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-4750fbc4445a8852a6e3",
+                  "file": "auth.spec.ts",
+                  "line": 290,
+                  "column": 5
+                },
+                {
+                  "title": "should include JWT token in WebSocket authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-10367834e64150868cb2",
+                  "file": "auth.spec.ts",
+                  "line": 305,
+                  "column": 5
+                },
+                {
+                  "title": "should store JWT token after successful login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-6fc5356e6e3b8c54667c",
+                  "file": "auth.spec.ts",
+                  "line": 290,
+                  "column": 5
+                },
+                {
+                  "title": "should include JWT token in WebSocket authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-e15e32153d21f6f9b27d",
+                  "file": "auth.spec.ts",
+                  "line": 305,
+                  "column": 5
+                },
+                {
+                  "title": "should store JWT token after successful login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-6ebb8c8b5181fcb9e2d1",
+                  "file": "auth.spec.ts",
+                  "line": 290,
+                  "column": 5
+                },
+                {
+                  "title": "should include JWT token in WebSocket authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-e31d2e192231834f8945",
+                  "file": "auth.spec.ts",
+                  "line": 305,
+                  "column": 5
+                },
+                {
+                  "title": "should store JWT token after successful login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-e2208151d7e69b9682f9",
+                  "file": "auth.spec.ts",
+                  "line": 290,
+                  "column": 5
+                },
+                {
+                  "title": "should include JWT token in WebSocket authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-6c7dc4ca7b23054ceae8",
+                  "file": "auth.spec.ts",
+                  "line": 305,
+                  "column": 5
+                },
+                {
+                  "title": "should store JWT token after successful login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-6dc6d08fc8be10cd5c3f",
+                  "file": "auth.spec.ts",
+                  "line": 290,
+                  "column": 5
+                },
+                {
+                  "title": "should include JWT token in WebSocket authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-584b48ff0fb2f4bd86c7",
+                  "file": "auth.spec.ts",
+                  "line": 305,
+                  "column": 5
+                },
+                {
+                  "title": "should store JWT token after successful login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9cbaef86eb1428c2caa8",
+                  "file": "auth.spec.ts",
+                  "line": 290,
+                  "column": 5
+                },
+                {
+                  "title": "should include JWT token in WebSocket authentication",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-8bf4d29251ae3a1efd32",
+                  "file": "auth.spec.ts",
+                  "line": 305,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Accessibility",
+              "file": "auth.spec.ts",
+              "line": 325,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should support keyboard navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-04e3ae859866d5c3b39b",
+                  "file": "auth.spec.ts",
+                  "line": 326,
+                  "column": 5
+                },
+                {
+                  "title": "should have proper ARIA labels and roles",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-f1c55fd933b06453ced7",
+                  "file": "auth.spec.ts",
+                  "line": 340,
+                  "column": 5
+                },
+                {
+                  "title": "should support keyboard navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-d59ed1c1d2fc2f521abc",
+                  "file": "auth.spec.ts",
+                  "line": 326,
+                  "column": 5
+                },
+                {
+                  "title": "should have proper ARIA labels and roles",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-1cea4a769babb03053ca",
+                  "file": "auth.spec.ts",
+                  "line": 340,
+                  "column": 5
+                },
+                {
+                  "title": "should support keyboard navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-a42d789bee47b2f6c599",
+                  "file": "auth.spec.ts",
+                  "line": 326,
+                  "column": 5
+                },
+                {
+                  "title": "should have proper ARIA labels and roles",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-03a481e29c58f7eb6baa",
+                  "file": "auth.spec.ts",
+                  "line": 340,
+                  "column": 5
+                },
+                {
+                  "title": "should support keyboard navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-63ebd0c8c1a0b65a927b",
+                  "file": "auth.spec.ts",
+                  "line": 326,
+                  "column": 5
+                },
+                {
+                  "title": "should have proper ARIA labels and roles",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-fdc49f6c7981eace4397",
+                  "file": "auth.spec.ts",
+                  "line": 340,
+                  "column": 5
+                },
+                {
+                  "title": "should support keyboard navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-49d413710dd2a603d308",
+                  "file": "auth.spec.ts",
+                  "line": 326,
+                  "column": 5
+                },
+                {
+                  "title": "should have proper ARIA labels and roles",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-bddba88c155e9309dd69",
+                  "file": "auth.spec.ts",
+                  "line": 340,
+                  "column": 5
+                },
+                {
+                  "title": "should support keyboard navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-df5ba2d0d1c27e7c970a",
+                  "file": "auth.spec.ts",
+                  "line": 326,
+                  "column": 5
+                },
+                {
+                  "title": "should have proper ARIA labels and roles",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "authenticated",
+                      "projectName": "authenticated",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-668459dc2ac2e151c56a",
+                  "file": "auth.spec.ts",
+                  "line": 340,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "chat.spec.ts",
+      "file": "chat.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Chat Functionality",
+          "file": "chat.spec.ts",
+          "line": 6,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should send and receive messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-8f844bed051d9d31bc69",
+              "file": "chat.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle multiple users in chat",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-8edf9b6e637c869ba820",
+              "file": "chat.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should handle connection status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-4ed64335052d86a1631b",
+              "file": "chat.spec.ts",
+              "line": 74,
+              "column": 3
+            },
+            {
+              "title": "should send and receive messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-b06f7e8032558cd18cfd",
+              "file": "chat.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle multiple users in chat",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-f797da1e6803bbca7821",
+              "file": "chat.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should handle connection status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-c31e210bea5ff14e6468",
+              "file": "chat.spec.ts",
+              "line": 74,
+              "column": 3
+            },
+            {
+              "title": "should send and receive messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-e32acb0fd106040c9cd0",
+              "file": "chat.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle multiple users in chat",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-0ad664b4760d417738cd",
+              "file": "chat.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should handle connection status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-841d2856239363ca6043",
+              "file": "chat.spec.ts",
+              "line": 74,
+              "column": 3
+            },
+            {
+              "title": "should send and receive messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-006eb7e9585641362627",
+              "file": "chat.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle multiple users in chat",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-9ddc0e208cfffad07954",
+              "file": "chat.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should handle connection status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-bc4e853b6f129a720fba",
+              "file": "chat.spec.ts",
+              "line": 74,
+              "column": 3
+            },
+            {
+              "title": "should send and receive messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-ad2058736fa65d2577d0",
+              "file": "chat.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle multiple users in chat",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-c611d76c5524d7a6b8d8",
+              "file": "chat.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should handle connection status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-db56964b591b6664c2c0",
+              "file": "chat.spec.ts",
+              "line": 74,
+              "column": 3
+            },
+            {
+              "title": "should send and receive messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-5b41eba1d8a1edf0bf40",
+              "file": "chat.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle multiple users in chat",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-4f6f302ea2dfa16c087a",
+              "file": "chat.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should handle connection status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6dac514d5d837ca37b9e-ca314a0f5ba624d49106",
+              "file": "chat.spec.ts",
+              "line": 74,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "cross-platform.spec.ts",
+      "file": "cross-platform.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Cross-Platform Compatibility",
+          "file": "cross-platform.spec.ts",
+          "line": 6,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should work on chromium",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-5bda4c7d59843612dd98",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on firefox",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-7cc8f348163751b6a566",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on webkit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-a106dff3e381652a6faa",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on iPhone Safari",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-dc5a774d0451e84ff8c9",
+              "file": "cross-platform.spec.ts",
+              "line": 50,
+              "column": 3
+            },
+            {
+              "title": "should work on Android Chrome",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-b80b0f744b83e1810d64",
+              "file": "cross-platform.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should work on iPad",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-6e6bafa2aa44b0b2b342",
+              "file": "cross-platform.spec.ts",
+              "line": 103,
+              "column": 3
+            },
+            {
+              "title": "should handle different screen resolutions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-9b88a7bf49ea59d2c08e",
+              "file": "cross-platform.spec.ts",
+              "line": 133,
+              "column": 3
+            },
+            {
+              "title": "should handle different user agents",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-889519182433b088b78c",
+              "file": "cross-platform.spec.ts",
+              "line": 173,
+              "column": 3
+            },
+            {
+              "title": "should work with keyboard navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-4a5fdbfe0d8bbab4a838",
+              "file": "cross-platform.spec.ts",
+              "line": 205,
+              "column": 3
+            },
+            {
+              "title": "should work on chromium",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-cafcd8611ac9b9dc5e67",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on firefox",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-f8a6b492092b921807bd",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on webkit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-285e72bab0572f2cf6ee",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on iPhone Safari",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-1a1ebb693a549c48ce99",
+              "file": "cross-platform.spec.ts",
+              "line": 50,
+              "column": 3
+            },
+            {
+              "title": "should work on Android Chrome",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-4064daa51887f25d58d9",
+              "file": "cross-platform.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should work on iPad",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-6ac01d9042716fed0dbf",
+              "file": "cross-platform.spec.ts",
+              "line": 103,
+              "column": 3
+            },
+            {
+              "title": "should handle different screen resolutions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-7c83336f51629fe09ada",
+              "file": "cross-platform.spec.ts",
+              "line": 133,
+              "column": 3
+            },
+            {
+              "title": "should handle different user agents",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-4af3d6c674d8c56e6934",
+              "file": "cross-platform.spec.ts",
+              "line": 173,
+              "column": 3
+            },
+            {
+              "title": "should work with keyboard navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-fe891f473aa6af702236",
+              "file": "cross-platform.spec.ts",
+              "line": 205,
+              "column": 3
+            },
+            {
+              "title": "should work on chromium",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-c9f37a765a327ac72a0e",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on firefox",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-de8db85575d4b60e7c57",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on webkit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-cfb63f7d61d2a2dc1cd0",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on iPhone Safari",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-699cab167f271cdcb719",
+              "file": "cross-platform.spec.ts",
+              "line": 50,
+              "column": 3
+            },
+            {
+              "title": "should work on Android Chrome",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-223d43b5fbc3bf4faaf1",
+              "file": "cross-platform.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should work on iPad",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-f997d3b44c6eb72518b2",
+              "file": "cross-platform.spec.ts",
+              "line": 103,
+              "column": 3
+            },
+            {
+              "title": "should handle different screen resolutions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-1fc02d7466874e2c49b4",
+              "file": "cross-platform.spec.ts",
+              "line": 133,
+              "column": 3
+            },
+            {
+              "title": "should handle different user agents",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-9abc1f1143d95a51e6ec",
+              "file": "cross-platform.spec.ts",
+              "line": 173,
+              "column": 3
+            },
+            {
+              "title": "should work with keyboard navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-84160bf88c5b8940b863",
+              "file": "cross-platform.spec.ts",
+              "line": 205,
+              "column": 3
+            },
+            {
+              "title": "should work on chromium",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-0e2556a5c07d0761a79d",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on firefox",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-88bf3d18afb3dcd356ea",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on webkit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-12e2b3b9bbbfab47e50c",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on iPhone Safari",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-53aff7152c0008ee36e9",
+              "file": "cross-platform.spec.ts",
+              "line": 50,
+              "column": 3
+            },
+            {
+              "title": "should work on Android Chrome",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-6f6bab5e94f531787b3a",
+              "file": "cross-platform.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should work on iPad",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-0d4d04b01de4eae7c022",
+              "file": "cross-platform.spec.ts",
+              "line": 103,
+              "column": 3
+            },
+            {
+              "title": "should handle different screen resolutions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-ea8834a73cfe0a640d6f",
+              "file": "cross-platform.spec.ts",
+              "line": 133,
+              "column": 3
+            },
+            {
+              "title": "should handle different user agents",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-152c5e3e7cb07715f15c",
+              "file": "cross-platform.spec.ts",
+              "line": 173,
+              "column": 3
+            },
+            {
+              "title": "should work with keyboard navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-1a96d112b14e2ba118bd",
+              "file": "cross-platform.spec.ts",
+              "line": 205,
+              "column": 3
+            },
+            {
+              "title": "should work on chromium",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-327fc1eac12ef4aae591",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on firefox",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-bc314bc14470c679e833",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on webkit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-cb9f4f78e4d7fe889390",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on iPhone Safari",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-a3aa1273cac2ed2cb27d",
+              "file": "cross-platform.spec.ts",
+              "line": 50,
+              "column": 3
+            },
+            {
+              "title": "should work on Android Chrome",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-fb3f3f0d6ffcd7771fac",
+              "file": "cross-platform.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should work on iPad",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-59bf4e2e10980e26d7c0",
+              "file": "cross-platform.spec.ts",
+              "line": 103,
+              "column": 3
+            },
+            {
+              "title": "should handle different screen resolutions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-18ca44628c836aeadd45",
+              "file": "cross-platform.spec.ts",
+              "line": 133,
+              "column": 3
+            },
+            {
+              "title": "should handle different user agents",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-c96224c7b9c6c8a873c8",
+              "file": "cross-platform.spec.ts",
+              "line": 173,
+              "column": 3
+            },
+            {
+              "title": "should work with keyboard navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-c713630551f969c50fa1",
+              "file": "cross-platform.spec.ts",
+              "line": 205,
+              "column": 3
+            },
+            {
+              "title": "should work on chromium",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-a897baad509b7d4ec8b8",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on firefox",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-d4b738ad69844d13fe3e",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on webkit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-59bae790644f6e42b1d1",
+              "file": "cross-platform.spec.ts",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should work on iPhone Safari",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-f0604dadfad1bc20b61e",
+              "file": "cross-platform.spec.ts",
+              "line": 50,
+              "column": 3
+            },
+            {
+              "title": "should work on Android Chrome",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-80f0dbeb760b0ed44f0a",
+              "file": "cross-platform.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should work on iPad",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-1471173592fc45eda67a",
+              "file": "cross-platform.spec.ts",
+              "line": 103,
+              "column": 3
+            },
+            {
+              "title": "should handle different screen resolutions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-75bc5f4a3e41301cfafd",
+              "file": "cross-platform.spec.ts",
+              "line": 133,
+              "column": 3
+            },
+            {
+              "title": "should handle different user agents",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-01d94b064d344c438063",
+              "file": "cross-platform.spec.ts",
+              "line": 173,
+              "column": 3
+            },
+            {
+              "title": "should work with keyboard navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c3a4512a57ffba0f4424-c41ce5cdfc9eaca0b13d",
+              "file": "cross-platform.spec.ts",
+              "line": 205,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "performance.spec.ts",
+      "file": "performance.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Performance Tests",
+          "file": "performance.spec.ts",
+          "line": 6,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should handle rapid message sending",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-71b07746a6fcb5d8fcf5",
+              "file": "performance.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle large message content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-94cf9be7cf7a61b8e3ef",
+              "file": "performance.spec.ts",
+              "line": 57,
+              "column": 3
+            },
+            {
+              "title": "should maintain performance with message history",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-0a6078dce66b82b2c2eb",
+              "file": "performance.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should handle WebSocket reconnection efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-1ffaca6265f66866cb5e",
+              "file": "performance.spec.ts",
+              "line": 97,
+              "column": 3
+            },
+            {
+              "title": "should handle concurrent users efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-0ab7682ad4a6efdcf939",
+              "file": "performance.spec.ts",
+              "line": 116,
+              "column": 3
+            },
+            {
+              "title": "should load page efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-b73d0e0dc99a3c1d9c82",
+              "file": "performance.spec.ts",
+              "line": 167,
+              "column": 3
+            },
+            {
+              "title": "should handle scroll performance with many messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-9ab2aad702989989028f",
+              "file": "performance.spec.ts",
+              "line": 185,
+              "column": 3
+            },
+            {
+              "title": "should maintain memory usage within limits",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-7aa8297eece694bd4536",
+              "file": "performance.spec.ts",
+              "line": 218,
+              "column": 3
+            },
+            {
+              "title": "should handle rapid message sending",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-48661b9646379b90e73c",
+              "file": "performance.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle large message content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-23c269ba6844e098bddb",
+              "file": "performance.spec.ts",
+              "line": 57,
+              "column": 3
+            },
+            {
+              "title": "should maintain performance with message history",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-08b9be40f3f7052b5592",
+              "file": "performance.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should handle WebSocket reconnection efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-be2578119f4834f23fc8",
+              "file": "performance.spec.ts",
+              "line": 97,
+              "column": 3
+            },
+            {
+              "title": "should handle concurrent users efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-91998d7012370c34a13a",
+              "file": "performance.spec.ts",
+              "line": 116,
+              "column": 3
+            },
+            {
+              "title": "should load page efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-290b155e826e87aceb01",
+              "file": "performance.spec.ts",
+              "line": 167,
+              "column": 3
+            },
+            {
+              "title": "should handle scroll performance with many messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-839487408d866adbd343",
+              "file": "performance.spec.ts",
+              "line": 185,
+              "column": 3
+            },
+            {
+              "title": "should maintain memory usage within limits",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-f10236516cda50d0524c",
+              "file": "performance.spec.ts",
+              "line": 218,
+              "column": 3
+            },
+            {
+              "title": "should handle rapid message sending",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-f8308478d78f89e2be40",
+              "file": "performance.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle large message content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-529cc95610bba3f28c55",
+              "file": "performance.spec.ts",
+              "line": 57,
+              "column": 3
+            },
+            {
+              "title": "should maintain performance with message history",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-f1c804792a3fe9959cfd",
+              "file": "performance.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should handle WebSocket reconnection efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-8ef1c634eb73c77a614c",
+              "file": "performance.spec.ts",
+              "line": 97,
+              "column": 3
+            },
+            {
+              "title": "should handle concurrent users efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-9bcca8a1888b2c7378f8",
+              "file": "performance.spec.ts",
+              "line": 116,
+              "column": 3
+            },
+            {
+              "title": "should load page efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-c508dcc1388b337103e2",
+              "file": "performance.spec.ts",
+              "line": 167,
+              "column": 3
+            },
+            {
+              "title": "should handle scroll performance with many messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-b7f36205a4010e1e6c58",
+              "file": "performance.spec.ts",
+              "line": 185,
+              "column": 3
+            },
+            {
+              "title": "should maintain memory usage within limits",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-dd89267654493632be69",
+              "file": "performance.spec.ts",
+              "line": 218,
+              "column": 3
+            },
+            {
+              "title": "should handle rapid message sending",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-139a197a6b3a563a56f4",
+              "file": "performance.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle large message content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-a28b2641f86b73756727",
+              "file": "performance.spec.ts",
+              "line": 57,
+              "column": 3
+            },
+            {
+              "title": "should maintain performance with message history",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-aae2475b6ebbead54b06",
+              "file": "performance.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should handle WebSocket reconnection efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-f848e97fa84e7497beab",
+              "file": "performance.spec.ts",
+              "line": 97,
+              "column": 3
+            },
+            {
+              "title": "should handle concurrent users efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-b9d2c8d54203e49b7e8c",
+              "file": "performance.spec.ts",
+              "line": 116,
+              "column": 3
+            },
+            {
+              "title": "should load page efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-7181141f76133822f024",
+              "file": "performance.spec.ts",
+              "line": 167,
+              "column": 3
+            },
+            {
+              "title": "should handle scroll performance with many messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-d061d44e7dbde5a2c40d",
+              "file": "performance.spec.ts",
+              "line": 185,
+              "column": 3
+            },
+            {
+              "title": "should maintain memory usage within limits",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-7881f0fc4606c96687fa",
+              "file": "performance.spec.ts",
+              "line": 218,
+              "column": 3
+            },
+            {
+              "title": "should handle rapid message sending",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-97e53771e3022e5a383e",
+              "file": "performance.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle large message content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-6f9b1281e1cce3fbb069",
+              "file": "performance.spec.ts",
+              "line": 57,
+              "column": 3
+            },
+            {
+              "title": "should maintain performance with message history",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-a7ffdd04f9c2ddb8ec03",
+              "file": "performance.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should handle WebSocket reconnection efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-236c7e5971304b26ede2",
+              "file": "performance.spec.ts",
+              "line": 97,
+              "column": 3
+            },
+            {
+              "title": "should handle concurrent users efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-094489abdf70deaca467",
+              "file": "performance.spec.ts",
+              "line": 116,
+              "column": 3
+            },
+            {
+              "title": "should load page efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-dccefb9557e4883415c3",
+              "file": "performance.spec.ts",
+              "line": 167,
+              "column": 3
+            },
+            {
+              "title": "should handle scroll performance with many messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-9ed6cbef483664cc79ba",
+              "file": "performance.spec.ts",
+              "line": 185,
+              "column": 3
+            },
+            {
+              "title": "should maintain memory usage within limits",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-2bc2d43de1fbe04bd317",
+              "file": "performance.spec.ts",
+              "line": 218,
+              "column": 3
+            },
+            {
+              "title": "should handle rapid message sending",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-7ccd2621e2487492f108",
+              "file": "performance.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should handle large message content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-cd0fed5810a33936be78",
+              "file": "performance.spec.ts",
+              "line": 57,
+              "column": 3
+            },
+            {
+              "title": "should maintain performance with message history",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-c5e971626f910558407c",
+              "file": "performance.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should handle WebSocket reconnection efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-3234502c8db31bca1a75",
+              "file": "performance.spec.ts",
+              "line": 97,
+              "column": 3
+            },
+            {
+              "title": "should handle concurrent users efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-5dc9bfad4562680d7808",
+              "file": "performance.spec.ts",
+              "line": 116,
+              "column": 3
+            },
+            {
+              "title": "should load page efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-e52d4631b346fc6255f3",
+              "file": "performance.spec.ts",
+              "line": 167,
+              "column": 3
+            },
+            {
+              "title": "should handle scroll performance with many messages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-9d00f80fadb81e8a2f64",
+              "file": "performance.spec.ts",
+              "line": 185,
+              "column": 3
+            },
+            {
+              "title": "should maintain memory usage within limits",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b15d6361b2fc38288977-ed568ccefa4e653def5a",
+              "file": "performance.spec.ts",
+              "line": 218,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "profile.spec.ts",
+      "file": "profile.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Profile Management",
+          "file": "profile.spec.ts",
+          "line": 6,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display user profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-66bbbaea90318d5c6055",
+              "file": "profile.spec.ts",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "should update profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-08d611732d97f4587123",
+              "file": "profile.spec.ts",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "should handle avatar upload",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-28024babfa9f95a39b56",
+              "file": "profile.spec.ts",
+              "line": 59,
+              "column": 3
+            },
+            {
+              "title": "should manage notification preferences",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-617aab21610c1de15201",
+              "file": "profile.spec.ts",
+              "line": 68,
+              "column": 3
+            },
+            {
+              "title": "should change password",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-2881b188b53ba5379138",
+              "file": "profile.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should update theme settings",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-6f3ae2f138c265d91dc2",
+              "file": "profile.spec.ts",
+              "line": 92,
+              "column": 3
+            },
+            {
+              "title": "should display user profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-072d2f88b2123e4d732f",
+              "file": "profile.spec.ts",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "should update profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-1fe846aa43f4a485e06a",
+              "file": "profile.spec.ts",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "should handle avatar upload",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-f3a1a613e95213585ef6",
+              "file": "profile.spec.ts",
+              "line": 59,
+              "column": 3
+            },
+            {
+              "title": "should manage notification preferences",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-21d2a3f955ff026ce949",
+              "file": "profile.spec.ts",
+              "line": 68,
+              "column": 3
+            },
+            {
+              "title": "should change password",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-b680cb1ee4b4cd15406b",
+              "file": "profile.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should update theme settings",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-f1bcdad61270ec0d48e0",
+              "file": "profile.spec.ts",
+              "line": 92,
+              "column": 3
+            },
+            {
+              "title": "should display user profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-cf6a281eb99258bc1033",
+              "file": "profile.spec.ts",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "should update profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-33849ef15fac6086922c",
+              "file": "profile.spec.ts",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "should handle avatar upload",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-2cdca6b9357b2caddfdb",
+              "file": "profile.spec.ts",
+              "line": 59,
+              "column": 3
+            },
+            {
+              "title": "should manage notification preferences",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-3e787bf6029a09b2370c",
+              "file": "profile.spec.ts",
+              "line": 68,
+              "column": 3
+            },
+            {
+              "title": "should change password",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-e8c131d5b2647aa17ca7",
+              "file": "profile.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should update theme settings",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-fbdf56de110ab718bfd6",
+              "file": "profile.spec.ts",
+              "line": 92,
+              "column": 3
+            },
+            {
+              "title": "should display user profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-77bebbc2436fb85488dd",
+              "file": "profile.spec.ts",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "should update profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-bdb9f6db1e184c871478",
+              "file": "profile.spec.ts",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "should handle avatar upload",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-8a733d3b9a4a70ba5a67",
+              "file": "profile.spec.ts",
+              "line": 59,
+              "column": 3
+            },
+            {
+              "title": "should manage notification preferences",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-bb056d6d8d468789ca13",
+              "file": "profile.spec.ts",
+              "line": 68,
+              "column": 3
+            },
+            {
+              "title": "should change password",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-8e422c6dc0c09680a99b",
+              "file": "profile.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should update theme settings",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-80ba0970d8713df55f83",
+              "file": "profile.spec.ts",
+              "line": 92,
+              "column": 3
+            },
+            {
+              "title": "should display user profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-5e485e5ea0bd7a89101b",
+              "file": "profile.spec.ts",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "should update profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-70e39e192917b77ee1ac",
+              "file": "profile.spec.ts",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "should handle avatar upload",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-6e6bec589e38cd2bbbcf",
+              "file": "profile.spec.ts",
+              "line": 59,
+              "column": 3
+            },
+            {
+              "title": "should manage notification preferences",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-cb269984710a9e53aa58",
+              "file": "profile.spec.ts",
+              "line": 68,
+              "column": 3
+            },
+            {
+              "title": "should change password",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-c8316c2810cd492d4e35",
+              "file": "profile.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should update theme settings",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-07917c75e2d2f5615320",
+              "file": "profile.spec.ts",
+              "line": 92,
+              "column": 3
+            },
+            {
+              "title": "should display user profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-b51290d4980e5724329d",
+              "file": "profile.spec.ts",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "should update profile information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-a9a1cd378868dc96aba6",
+              "file": "profile.spec.ts",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "should handle avatar upload",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-c25d9059e7355a800fd7",
+              "file": "profile.spec.ts",
+              "line": 59,
+              "column": 3
+            },
+            {
+              "title": "should manage notification preferences",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-8cfe4aa47da450ad81c4",
+              "file": "profile.spec.ts",
+              "line": 68,
+              "column": 3
+            },
+            {
+              "title": "should change password",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-c2ae1ae3cf7782942ec1",
+              "file": "profile.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should update theme settings",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "authenticated",
+                  "projectName": "authenticated",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b79b4ee550a37632f1-7c1c314f2cd0e8cbfd80",
+              "file": "profile.spec.ts",
+              "line": 92,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-05-28T08:20:37.456Z",
+    "duration": 352.8910000000001,
+    "expected": 0,
+    "skipped": 264,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

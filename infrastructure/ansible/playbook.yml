@@ -1,0 +1,530 @@
+---
+# Chat Rooms Application Ansible Playbook
+# Automates server configuration, deployment, and maintenance tasks
+
+- name: Chat Rooms Application Infrastructure Setup
+  hosts: all
+  become: yes
+  gather_facts: yes
+  vars:
+    app_name: chat-rooms
+    app_user: livechat
+    app_group: livechat
+    app_home: /opt/chat-rooms
+    docker_compose_version: "2.20.2"
+    node_version: "20"
+    backup_retention_days: 30
+    monitoring_enabled: true
+    
+  pre_tasks:
+    - name: Update package cache
+      package:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+    
+    - name: Install required packages
+      package:
+        name:
+          - curl
+          - wget
+          - git
+          - htop
+          - vim
+          - unzip
+          - software-properties-common
+          - apt-transport-https
+          - ca-certificates
+          - gnupg
+          - lsb-release
+        state: present
+
+  tasks:
+    # User and Group Setup
+    - name: Create application group
+      group:
+        name: "{{ app_group }}"
+        state: present
+
+    - name: Create application user
+      user:
+        name: "{{ app_user }}"
+        group: "{{ app_group }}"
+        home: "{{ app_home }}"
+        shell: /bin/bash
+        system: yes
+        create_home: yes
+        state: present
+
+    # Docker Installation
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install Docker
+      package:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+
+    - name: Add user to docker group
+      user:
+        name: "{{ app_user }}"
+        groups: docker
+        append: yes
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    # Docker Compose Installation
+    - name: Install Docker Compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/v{{ docker_compose_version }}/docker-compose-linux-x86_64"
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Create docker-compose symlink
+      file:
+        src: /usr/local/bin/docker-compose
+        dest: /usr/bin/docker-compose
+        state: link
+
+    # Node.js Installation
+    - name: Add NodeSource GPG key
+      apt_key:
+        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Add NodeSource repository
+      apt_repository:
+        repo: "deb https://deb.nodesource.com/node_{{ node_version }}.x {{ ansible_distribution_release }} main"
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install Node.js
+      package:
+        name: nodejs
+        state: present
+
+    # Application Directory Setup
+    - name: Create application directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: '0755'
+      loop:
+        - "{{ app_home }}"
+        - "{{ app_home }}/releases"
+        - "{{ app_home }}/shared"
+        - "{{ app_home }}/shared/logs"
+        - "{{ app_home }}/shared/uploads"
+        - "{{ app_home }}/shared/backups"
+        - "{{ app_home }}/shared/ssl"
+        - "{{ app_home }}/shared/config"
+        - /var/log/chat-rooms
+
+    # SSL Certificate Setup
+    - name: Install Certbot
+      package:
+        name:
+          - certbot
+          - python3-certbot-nginx
+        state: present
+      when: ssl_enabled | default(false)
+
+    # Firewall Configuration
+    - name: Install UFW
+      package:
+        name: ufw
+        state: present
+
+    - name: Configure UFW defaults
+      ufw:
+        direction: "{{ item.direction }}"
+        policy: "{{ item.policy }}"
+      loop:
+        - { direction: 'incoming', policy: 'deny' }
+        - { direction: 'outgoing', policy: 'allow' }
+
+    - name: Allow SSH
+      ufw:
+        rule: allow
+        port: "22"
+        proto: tcp
+
+    - name: Allow HTTP
+      ufw:
+        rule: allow
+        port: "80"
+        proto: tcp
+
+    - name: Allow HTTPS
+      ufw:
+        rule: allow
+        port: "443"
+        proto: tcp
+
+    - name: Allow application port
+      ufw:
+        rule: allow
+        port: "3000"
+        proto: tcp
+      when: allow_app_port | default(false)
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+
+    # Nginx Installation and Configuration
+    - name: Install Nginx
+      package:
+        name: nginx
+        state: present
+
+    - name: Create Nginx configuration
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-available/chat-rooms
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart nginx
+
+    - name: Enable Nginx site
+      file:
+        src: /etc/nginx/sites-available/chat-rooms
+        dest: /etc/nginx/sites-enabled/chat-rooms
+        state: link
+      notify: restart nginx
+
+    - name: Remove default Nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: restart nginx
+
+    - name: Start and enable Nginx
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
+    # Database Setup (PostgreSQL)
+    - name: Install PostgreSQL
+      package:
+        name:
+          - postgresql
+          - postgresql-contrib
+          - python3-psycopg2
+        state: present
+      when: install_database | default(true)
+
+    - name: Start and enable PostgreSQL
+      systemd:
+        name: postgresql
+        state: started
+        enabled: yes
+      when: install_database | default(true)
+
+    - name: Create application database
+      postgresql_db:
+        name: "{{ db_name | default('livechat') }}"
+        state: present
+      become_user: postgres
+      when: install_database | default(true)
+
+    - name: Create database user
+      postgresql_user:
+        name: "{{ db_user | default('livechat') }}"
+        password: "{{ db_password }}"
+        db: "{{ db_name | default('livechat') }}"
+        priv: ALL
+        state: present
+      become_user: postgres
+      when: install_database | default(true)
+
+    # Redis Installation
+    - name: Install Redis
+      package:
+        name: redis-server
+        state: present
+      when: install_redis | default(true)
+
+    - name: Configure Redis
+      template:
+        src: redis.conf.j2
+        dest: /etc/redis/redis.conf
+        owner: redis
+        group: redis
+        mode: '0644'
+      notify: restart redis
+      when: install_redis | default(true)
+
+    - name: Start and enable Redis
+      systemd:
+        name: redis-server
+        state: started
+        enabled: yes
+      when: install_redis | default(true)
+
+    # Monitoring Setup
+    - name: Install monitoring tools
+      package:
+        name:
+          - htop
+          - iotop
+          - nethogs
+          - ncdu
+        state: present
+      when: monitoring_enabled
+
+    # Log rotation setup
+    - name: Create logrotate configuration
+      template:
+        src: logrotate.j2
+        dest: /etc/logrotate.d/chat-rooms
+        owner: root
+        group: root
+        mode: '0644'
+
+    # Backup script
+    - name: Create backup script
+      template:
+        src: backup.sh.j2
+        dest: "{{ app_home }}/shared/backup.sh"
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: '0755'
+
+    - name: Create backup cron job
+      cron:
+        name: "Chat Rooms Application Backup"
+        user: "{{ app_user }}"
+        minute: "0"
+        hour: "2"
+        job: "{{ app_home }}/shared/backup.sh"
+
+    # Security hardening
+    - name: Configure SSH security
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backup: yes
+      loop:
+        - { regexp: '^#?PermitRootLogin', line: 'PermitRootLogin no' }
+        - { regexp: '^#?PasswordAuthentication', line: 'PasswordAuthentication no' }
+        - { regexp: '^#?X11Forwarding', line: 'X11Forwarding no' }
+        - { regexp: '^#?MaxAuthTries', line: 'MaxAuthTries 3' }
+        - { regexp: '^#?ClientAliveInterval', line: 'ClientAliveInterval 300' }
+        - { regexp: '^#?ClientAliveCountMax', line: 'ClientAliveCountMax 2' }
+      notify: restart ssh
+
+    # Fail2ban installation
+    - name: Install fail2ban
+      package:
+        name: fail2ban
+        state: present
+
+    - name: Configure fail2ban
+      template:
+        src: jail.local.j2
+        dest: /etc/fail2ban/jail.local
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart fail2ban
+
+    - name: Start and enable fail2ban
+      systemd:
+        name: fail2ban
+        state: started
+        enabled: yes
+
+    # System optimization
+    - name: Configure system limits
+      pam_limits:
+        domain: "{{ app_user }}"
+        limit_type: "{{ item.type }}"
+        limit_item: "{{ item.item }}"
+        value: "{{ item.value }}"
+      loop:
+        - { type: 'soft', item: 'nofile', value: '65536' }
+        - { type: 'hard', item: 'nofile', value: '65536' }
+        - { type: 'soft', item: 'nproc', value: '32768' }
+        - { type: 'hard', item: 'nproc', value: '32768' }
+
+    # Environment configuration
+    - name: Create environment file
+      template:
+        src: environment.j2
+        dest: "{{ app_home }}/shared/.env"
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: '0600'
+
+    # Health check script
+    - name: Create health check script
+      template:
+        src: health-check.sh.j2
+        dest: "{{ app_home }}/shared/health-check.sh"
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: '0755'
+
+    - name: Create health check cron job
+      cron:
+        name: "Chat Rooms Health Check"
+        user: "{{ app_user }}"
+        minute: "*/5"
+        job: "{{ app_home }}/shared/health-check.sh"
+
+  handlers:
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+
+    - name: restart redis
+      systemd:
+        name: redis-server
+        state: restarted
+
+    - name: restart ssh
+      systemd:
+        name: ssh
+        state: restarted
+
+    - name: restart fail2ban
+      systemd:
+        name: fail2ban
+        state: restarted
+
+# Deployment Playbook
+- name: Deploy Chat Rooms Application
+  hosts: all
+  become: yes
+  become_user: "{{ app_user | default('livechat') }}"
+  vars:
+    app_name: chat-rooms
+    app_user: livechat
+    app_home: /opt/chat-rooms
+    release_version: "{{ ansible_date_time.epoch }}"
+    keep_releases: 5
+
+  tasks:
+    - name: Create release directory
+      file:
+        path: "{{ app_home }}/releases/{{ release_version }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: '0755'
+
+    - name: Clone application repository
+      git:
+        repo: "{{ git_repo_url }}"
+        dest: "{{ app_home }}/releases/{{ release_version }}"
+        version: "{{ git_branch | default('main') }}"
+        force: yes
+      when: git_repo_url is defined
+
+    - name: Copy application files
+      copy:
+        src: "{{ local_app_path }}/"
+        dest: "{{ app_home }}/releases/{{ release_version }}/"
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: preserve
+      when: local_app_path is defined
+
+    - name: Link shared files
+      file:
+        src: "{{ app_home }}/shared/{{ item }}"
+        dest: "{{ app_home }}/releases/{{ release_version }}/{{ item }}"
+        state: link
+        force: yes
+      loop:
+        - .env
+        - logs
+        - uploads
+
+    - name: Install dependencies
+      npm:
+        path: "{{ app_home }}/releases/{{ release_version }}"
+        state: present
+        production: yes
+
+    - name: Build application
+      command: npm run build
+      args:
+        chdir: "{{ app_home }}/releases/{{ release_version }}"
+
+    - name: Run database migrations
+      command: npm run migrate
+      args:
+        chdir: "{{ app_home }}/releases/{{ release_version }}"
+      when: run_migrations | default(true)
+
+    - name: Stop application
+      docker_compose:
+        project_src: "{{ app_home }}/current"
+        state: absent
+      ignore_errors: yes
+      when: app_home_current.stat.exists is defined and app_home_current.stat.exists
+
+    - name: Update current symlink
+      file:
+        src: "{{ app_home }}/releases/{{ release_version }}"
+        dest: "{{ app_home }}/current"
+        state: link
+        force: yes
+
+    - name: Start application
+      docker_compose:
+        project_src: "{{ app_home }}/current"
+        state: present
+
+    - name: Wait for application to start
+      uri:
+        url: "http://localhost:3001/health"
+        method: GET
+        status_code: 200
+      retries: 30
+      delay: 10
+
+    - name: Clean up old releases
+      shell: |
+        cd {{ app_home }}/releases
+        ls -1dt */ | tail -n +{{ keep_releases + 1 }} | xargs rm -rf
+      when: keep_releases is defined
+
+    - name: Send deployment notification
+      uri:
+        url: "{{ slack_webhook_url }}"
+        method: POST
+        headers:
+          Content-Type: application/json
+        body_format: json
+        body:
+          text: "Chat Rooms deployment completed successfully on {{ inventory_hostname }}"
+          username: "Ansible Bot"
+          icon_emoji: ":rocket:"
+      when: slack_webhook_url is defined

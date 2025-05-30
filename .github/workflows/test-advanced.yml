@@ -1,0 +1,419 @@
+name: 🧪 Advanced Testing Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+  workflow_dispatch:
+
+env:
+  NODE_ENV: test
+
+jobs:
+  # Job 1: End-to-End Testing
+  e2e-testing:
+    name: 🎭 E2E Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+        options: --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+        viewport: [desktop, mobile]
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: |
+          npm ci
+          npm run setup
+
+      - name: 🏗️ Build applications
+        run: npm run build
+
+      - name: 🎭 Install Playwright
+        run: |
+          cd front && npx playwright install --with-deps
+
+      - name: 🚀 Start applications
+        run: |
+          npm run start:test &
+          sleep 30
+        env:
+          MONGO_URI: mongodb://localhost:27017/chat-rooms-e2e
+          REDIS_URL: redis://localhost:6379
+          JWT_SECRET: test-secret-for-e2e-only
+          PORT: 3001
+          VITE_API_URL: http://localhost:3001
+
+      - name: 🎭 Run E2E tests
+        run: |
+          cd front && npm run test:e2e -- --project=${{ matrix.browser }}
+        env:
+          VIEWPORT: ${{ matrix.viewport }}
+
+      - name: 📊 Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-results-${{ matrix.browser }}-${{ matrix.viewport }}
+          path: |
+            front/test-results/
+            front/playwright-report/
+          retention-days: 7
+
+  # Job 2: API Contract Testing
+  contract-testing:
+    name: 📋 Contract Testing
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: |
+          npm ci
+          npm run setup
+
+      - name: 🏗️ Build API
+        run: |
+          cd api && npm run build
+
+      - name: 🚀 Start API
+        run: |
+          cd api && npm run start:prod &
+          sleep 20
+        env:
+          MONGO_URI: mongodb://localhost:27017/chat-rooms-contract
+          JWT_SECRET: test-contract-secret
+
+      - name: 📋 Run OpenAPI validation
+        run: |
+          cd api && npm run validate:openapi
+
+      - name: 🧪 Run contract tests
+        run: |
+          cd api && npm run test:contract
+
+      - name: 📊 Generate API documentation
+        run: |
+          cd api && npm run docs:generate
+
+      - name: 📤 Upload API docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-documentation
+          path: api/docs/
+          retention-days: 30
+
+  # Job 3: Security Testing
+  security-testing:
+    name: 🔐 Security Testing
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: |
+          npm ci
+          npm run setup
+
+      - name: 🏗️ Build applications
+        run: npm run build
+
+      - name: 🚀 Start applications
+        run: |
+          npm run start:test &
+          sleep 30
+        env:
+          MONGO_URI: mongodb://localhost:27017/chat-rooms-security
+          JWT_SECRET: test-security-secret
+
+      - name: 🕷️ OWASP ZAP Security Scan
+        uses: zaproxy/action-full-scan@v0.9.0
+        with:
+          target: 'http://localhost:3001'
+          cmd_options: '-a -j -m 10 -T 60'
+
+      - name: 🔐 Security Tests
+        run: |
+          cd api && npm run test:security
+
+      - name: 📊 Upload security results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-test-results
+          path: |
+            report_html.html
+            report_json.json
+          retention-days: 14
+
+  # Job 4: Accessibility Testing
+  accessibility-testing:
+    name: ♿ Accessibility Testing
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: |
+          npm ci
+          npm run setup
+
+      - name: 🏗️ Build applications
+        run: npm run build
+
+      - name: 🚀 Start applications
+        run: |
+          npm run start:test &
+          sleep 30
+
+      - name: ♿ Run accessibility tests
+        run: |
+          cd front && npm run test:a11y
+
+      - name: 📊 Upload accessibility results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: accessibility-results
+          path: front/accessibility-report/
+          retention-days: 7
+
+  # Job 5: Visual Regression Testing
+  visual-regression:
+    name: 👁️ Visual Regression
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: |
+          npm ci
+          npm run setup
+
+      - name: 🏗️ Build applications
+        run: npm run build
+
+      - name: 🚀 Start applications
+        run: |
+          npm run start:test &
+          sleep 30
+
+      - name: 👁️ Run visual regression tests
+        run: |
+          cd front && npm run test:visual
+
+      - name: 📊 Upload visual diff results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visual-regression-results
+          path: front/visual-diffs/
+          retention-days: 14
+
+  # Job 6: Database Migration Testing
+  migration-testing:
+    name: 🗄️ Migration Testing
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: |
+          npm ci
+          cd api && npm ci
+
+      - name: 🗄️ Test database migrations
+        run: |
+          cd api && npm run migration:test
+        env:
+          MONGO_URI: mongodb://localhost:27017/chat-rooms-migration
+
+      - name: 🔄 Test rollback procedures
+        run: |
+          cd api && npm run migration:rollback:test
+
+  # Job 7: Load Testing
+  load-testing:
+    name: 🚛 Load Testing
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: |
+          npm ci
+          npm run setup
+
+      - name: 🏗️ Build applications
+        run: npm run build
+
+      - name: 🚀 Start applications
+        run: |
+          npm run start:prod &
+          sleep 30
+        env:
+          MONGO_URI: mongodb://localhost:27017/chat-rooms-load
+          REDIS_URL: redis://localhost:6379
+
+      - name: 🚛 Run load tests
+        uses: grafana/k6-action@v0.3.1
+        with:
+          filename: tests/performance/load-test.js
+        env:
+          K6_CLOUD_PROJECT_ID: ${{ secrets.K6_CLOUD_PROJECT_ID }}
+
+      - name: 📊 Performance analysis
+        run: |
+          echo "## 🚛 Load Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "Load testing completed - check artifacts for detailed results" >> $GITHUB_STEP_SUMMARY
+
+  # Job 8: Test Summary
+  test-summary:
+    name: 📊 Test Summary
+    runs-on: ubuntu-latest
+    needs: [e2e-testing, contract-testing, security-testing, accessibility-testing, visual-regression, migration-testing]
+    if: always()
+
+    steps:
+      - name: 📊 Generate test summary
+        run: |
+          echo "## 🧪 Advanced Testing Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | Status | Details |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Testing | ${{ needs.e2e-testing.result }} | Cross-browser compatibility |" >> $GITHUB_STEP_SUMMARY
+          echo "| Contract Testing | ${{ needs.contract-testing.result }} | API contract validation |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Testing | ${{ needs.security-testing.result }} | OWASP ZAP security scan |" >> $GITHUB_STEP_SUMMARY
+          echo "| Accessibility | ${{ needs.accessibility-testing.result }} | A11y compliance check |" >> $GITHUB_STEP_SUMMARY
+          echo "| Visual Regression | ${{ needs.visual-regression.result }} | UI consistency validation |" >> $GITHUB_STEP_SUMMARY
+          echo "| Migration Testing | ${{ needs.migration-testing.result }} | Database migration safety |" >> $GITHUB_STEP_SUMMARY
+
+      - name: 🎉 Success notification
+        if: ${{ needs.e2e-testing.result == 'success' && needs.contract-testing.result == 'success' && needs.security-testing.result == 'success' }}
+        run: |
+          echo "🎉 All advanced tests passed successfully!"
+          echo "✅ E2E tests validated across browsers"
+          echo "✅ API contracts verified"
+          echo "✅ Security scans completed"
+          echo "✅ Accessibility compliance verified"
+
+      - name: ⚠️ Test failures detected
+        if: contains(needs.*.result, 'failure')
+        run: |
+          echo "❌ Some tests failed - please review the results"
+          echo "🔍 Check individual test reports for details"

@@ -1,0 +1,465 @@
+# Kubernetes namespace for Chat Rooms application
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    environment: ${ENVIRONMENT}
+    managed-by: github-actions
+---
+# ConfigMap for application configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chat-rooms-config
+  namespace: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    environment: ${ENVIRONMENT}
+data:
+  NODE_ENV: "${ENVIRONMENT}"
+  PORT: "3000"
+  FRONTEND_URL: "${FRONTEND_URL}"
+  CORS_ORIGIN: "${CORS_ORIGIN}"
+  JWT_EXPIRES_IN: "24h"
+  RATE_LIMIT_WINDOW: "15"
+  RATE_LIMIT_MAX: "100"
+  REDIS_TTL: "3600"
+  LOG_LEVEL: "${LOG_LEVEL}"
+  METRICS_ENABLED: "true"
+  HEALTH_CHECK_PATH: "/health"
+---
+# Secret for sensitive configuration
+apiVersion: v1
+kind: Secret
+metadata:
+  name: chat-rooms-secrets
+  namespace: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    environment: ${ENVIRONMENT}
+type: Opaque
+stringData:
+  DATABASE_URL: "${DATABASE_URL}"
+  JWT_SECRET: "${JWT_SECRET}"
+  REDIS_URL: "${REDIS_URL}"
+  MONGODB_URI: "${MONGODB_URI}"
+---
+# API Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-rooms-api
+  namespace: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    component: api
+    environment: ${ENVIRONMENT}
+spec:
+  replicas: ${API_REPLICAS}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: chat-rooms
+      component: api
+  template:
+    metadata:
+      labels:
+        app: chat-rooms
+        component: api
+        environment: ${ENVIRONMENT}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: chat-rooms-service-account
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: api
+        image: ${API_IMAGE}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3001
+          name: http
+          protocol: TCP
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: chat-rooms-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: chat-rooms-config
+              key: PORT
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: chat-rooms-secrets
+              key: DATABASE_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: chat-rooms-secrets
+              key: JWT_SECRET
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: chat-rooms-secrets
+              key: REDIS_URL
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: chat-rooms-secrets
+              key: MONGODB_URI
+        envFrom:
+        - configMapRef:
+            name: chat-rooms-config
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+            initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 3001
+            initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: logs
+          mountPath: /app/logs
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: logs
+        emptyDir: {}
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      tolerations:
+      - key: "app"
+        operator: "Equal"
+        value: "chat-rooms"
+        effect: "NoSchedule"
+---
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-rooms-frontend
+  namespace: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    component: frontend
+    environment: ${ENVIRONMENT}
+spec:
+  replicas: ${FRONTEND_REPLICAS}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: chat-rooms
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: chat-rooms
+        component: frontend
+        environment: ${ENVIRONMENT}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        fsGroup: 101
+      containers:
+      - name: frontend
+        image: ${FRONTEND_IMAGE}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        env:
+        - name: VITE_API_URL
+          value: "${API_URL}"
+        - name: VITE_WS_URL
+          value: "${WS_URL}"
+        - name: VITE_ENVIRONMENT
+          value: "${ENVIRONMENT}"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: nginx-cache
+          mountPath: /var/cache/nginx
+        - name: nginx-run
+          mountPath: /var/run
+      volumes:
+      - name: nginx-cache
+        emptyDir: {}
+      - name: nginx-run
+        emptyDir: {}
+      nodeSelector:
+        kubernetes.io/arch: amd64
+---
+# API Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-rooms-api-service
+  namespace: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    component: api
+    environment: ${ENVIRONMENT}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "3000"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3001
+  targetPort: 3001
+  protocol: TCP
+    name: http
+  selector:
+    app: chat-rooms
+    component: api
+---
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-rooms-frontend-service
+  namespace: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    component: frontend
+    environment: ${ENVIRONMENT}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: chat-rooms
+    component: frontend
+---
+# Ingress for external access
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chat-rooms-ingress
+  namespace: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    environment: ${ENVIRONMENT}
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/websocket-services: "chat-rooms-api-service"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - ${DOMAIN_NAME}
+    secretName: chat-rooms-tls-${ENVIRONMENT}
+  rules:
+  - host: ${DOMAIN_NAME}
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: chat-rooms-api-service
+            port:
+              number: 3001
+      - path: /socket.io
+        pathType: Prefix
+        backend:
+          service:
+            name: chat-rooms-api-service
+            port:
+              number: 3001
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: chat-rooms-frontend-service
+            port:
+              number: 80
+---
+# Service Account
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: chat-rooms-service-account
+  namespace: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    environment: ${ENVIRONMENT}
+automountServiceAccountToken: false
+---
+# Horizontal Pod Autoscaler for API
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: chat-rooms-api-hpa
+  namespace: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    component: api
+    environment: ${ENVIRONMENT}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: chat-rooms-api
+  minReplicas: ${API_MIN_REPLICAS}
+  maxReplicas: ${API_MAX_REPLICAS}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+---
+# Pod Disruption Budget for API
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: chat-rooms-api-pdb
+  namespace: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    component: api
+    environment: ${ENVIRONMENT}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: chat-rooms
+      component: api
+---
+# Network Policy for security
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: chat-rooms-network-policy
+  namespace: chat-rooms-${ENVIRONMENT}
+  labels:
+    app: chat-rooms
+    environment: ${ENVIRONMENT}
+spec:
+  podSelector:
+    matchLabels:
+      app: chat-rooms
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    - podSelector:
+        matchLabels:
+          app: chat-rooms
+    ports:
+    - protocol: TCP
+      port: 3001
+    - protocol: TCP
+      port: 80
+  egress:
+  - {} # Allow all egress traffic
