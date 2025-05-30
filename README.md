@@ -1,4 +1,4 @@
-# 🚀 Enterprise Chat Rooms Application
+# 🚀 Enterprise Chat Rooms Application WIP
 
 > **Enterprise-grade real-time communication platform built with modern technologies, zero-trust security, and cloud-native architecture.**
 
