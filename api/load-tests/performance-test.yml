@@ -1,0 +1,141 @@
+config:
+  target: 'http://localhost:3001'
+  phases:
+    # Warmup phase
+    - duration: 60
+      arrivalRate: 5
+      name: "Warmup"
+    # Load test phase
+    - duration: 300
+      arrivalRate: 20
+      name: "Load test"
+    # Spike test phase  
+    - duration: 120
+      arrivalRate: 50
+      name: "Spike test"
+    # Cool down
+    - duration: 60
+      arrivalRate: 5
+      name: "Cool down"
+  processor: "./performance-test-processor.js"
+  variables:
+    testUsers:
+      - "user1@test.com"
+      - "user2@test.com" 
+      - "user3@test.com"
+      - "user4@test.com"
+      - "user5@test.com"
+
+scenarios:
+  # Test message sending performance
+  - name: "Send messages"
+    weight: 40
+    engine: socketio
+    socketio:
+      namespace: '/chat'
+    flow:
+      - emit:
+          channel: "authenticate"
+          data:
+            token: "{{ generateAuthToken() }}"
+      - think: 1
+      - emit:
+          channel: "joinRoom"
+          data:
+            roomId: "performance-test-room"
+      - think: 2
+      - loop:
+          - emit:
+              channel: "sendMessage"
+              data:
+                roomId: "performance-test-room"
+                content: "Performance test message {{ $randomString() }}"
+                type: "text"
+          - think: 3
+        count: 10
+
+  # Test typing indicators performance
+  - name: "Typing indicators"
+    weight: 20
+    engine: socketio
+    socketio:
+      namespace: '/chat'
+    flow:
+      - emit:
+          channel: "authenticate"
+          data:
+            token: "{{ generateAuthToken() }}"
+      - think: 1
+      - emit:
+          channel: "joinRoom"
+          data:
+            roomId: "performance-test-room"
+      - think: 1
+      - loop:
+          - emit:
+              channel: "startTyping"
+              data:
+                roomId: "performance-test-room"
+          - think: 2
+          - emit:
+              channel: "stopTyping"
+              data:
+                roomId: "performance-test-room"
+          - think: 3
+        count: 5
+
+  # Test REST API performance
+  - name: "REST API calls"
+    weight: 30
+    flow:
+      # Authenticate
+      - post:
+          url: "/auth/login"
+          json:
+            email: "{{ $pick(testUsers) }}"
+            password: "testpassword123"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+      # Get user profile
+      - get:
+          url: "/users/profile"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+      # Get messages
+      - get:
+          url: "/messages?roomId=performance-test-room&limit=20"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+      # Send message via REST
+      - post:
+          url: "/messages"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            roomId: "performance-test-room"
+            content: "REST API test message {{ $randomString() }}"
+            type: "text"
+      - think: 2
+
+  # Test connection stress
+  - name: "Connection stress"
+    weight: 10
+    engine: socketio
+    socketio:
+      namespace: '/chat'
+    flow:
+      - emit:
+          channel: "authenticate"
+          data:
+            token: "{{ generateAuthToken() }}"
+      - think: 5
+      - emit:
+          channel: "joinRoom"
+          data:
+            roomId: "performance-test-room"
+      - think: 30  # Stay connected for 30 seconds
+      - emit:
+          channel: "leaveRoom"
+          data:
+            roomId: "performance-test-room"

@@ -1,0 +1,355 @@
+import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+import { OWASPSecurityService } from './owasp-security.service';
+import { CSPService } from './csp.service';
+import { SecurityMonitoringService } from './security-monitoring.service';
+import { SessionAuthSecurityService } from './session-auth-security.service';
+import { DatabaseSecurityService } from './database-security.service';
+
+/**
+ * Security middleware that applies comprehensive OWASP security measures
+ * to all incoming requests and outgoing responses
+ */
+@Injectable()
+export class SecurityMiddleware implements NestMiddleware {
+  private readonly logger = new Logger(SecurityMiddleware.name);
+
+  constructor(
+    private readonly owaspSecurity: OWASPSecurityService,
+    private readonly cspService: CSPService,
+    private readonly securityMonitoring: SecurityMonitoringService,
+    private readonly sessionSecurity: SessionAuthSecurityService,
+    private readonly dbSecurity: DatabaseSecurityService,
+  ) {}
+
+  async use(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const startTime = Date.now();
+    const requestId = this.generateRequestId();
+
+    try {
+      // Add request ID for tracking
+      req['requestId'] = requestId;
+
+      // 1. Security Headers - Apply comprehensive security headers
+      await this.applySecurityHeaders(req, res);
+
+      // 2. Request Validation - Validate incoming request
+      await this.validateRequest(req);
+
+      // 3. Session Security - Validate session and authentication
+      await this.validateSession(req);
+
+      // 4. Rate Limiting Check - Monitor for abuse
+      await this.checkRateLimit(req);
+
+      // 5. Database Security - Prepare secure database context
+      await this.prepareSecureDbContext(req);
+
+      // 6. Security Monitoring - Log security event
+      await this.logSecurityEvent(req, 'REQUEST_STARTED');
+
+      // Continue to next middleware
+      next();
+
+    } catch (error) {
+      this.logger.error(`Security middleware error: ${error.message}`, {
+        requestId,
+        url: req.url,
+        method: req.method,
+        ip: req.ip,
+        userAgent: req.get('User-Agent'),
+        error: error.stack,
+      });
+
+      // Log security incident
+      await this.logSecurityIncident(req, error);
+
+      // Return secure error response
+      res.status(403).json({
+        error: 'Security validation failed',
+        requestId,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }
+  /**
+   * Apply comprehensive security headers to response
+   */
+  private async applySecurityHeaders(req: Request, res: Response): Promise<void> {
+    // Get route-specific CSP policy
+    const cspPolicy = await this.cspService.generateCSP(req.path);
+    
+    // Apply CSP headers
+    res.setHeader('Content-Security-Policy', cspPolicy);
+    
+    // Generate and set nonce for inline scripts
+    const nonce = await this.cspService.generateNonce();
+    res.locals.nonce = nonce;
+
+    // Apply comprehensive security headers
+    const securityHeaders = {
+      // HTTPS enforcement
+      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+      
+      // Frame protection
+      'X-Frame-Options': 'DENY',
+      'X-Content-Type-Options': 'nosniff',
+      
+      // XSS protection
+      'X-XSS-Protection': '1; mode=block',
+      
+      // Referrer policy
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      
+      // Permissions policy
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
+      
+      // Cross-Origin policies
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Resource-Policy': 'same-origin',
+      
+      // Cache control for security
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+      
+      // Remove server information
+      'Server': 'SecureServer',
+    };
+
+    Object.entries(securityHeaders).forEach(([header, value]) => {
+      res.setHeader(header, value);
+    });
+  }  /**
+   * Validate incoming request for security threats
+   */
+  private async validateRequest(req: Request): Promise<void> {
+    // Validate against injection attacks
+    if (req.body && typeof req.body === 'string') {
+      await this.owaspSecurity.validateInjectionPrevention(req.body);
+    }
+    if (req.query && typeof req.query === 'object') {
+      for (const value of Object.values(req.query)) {
+        if (typeof value === 'string') {
+          await this.owaspSecurity.validateInjectionPrevention(value);
+        }
+      }
+    }
+    if (req.params && typeof req.params === 'object') {
+      for (const value of Object.values(req.params)) {
+        if (typeof value === 'string') {
+          await this.owaspSecurity.validateInjectionPrevention(value);
+        }
+      }
+    }
+
+    // Validate request size
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    const contentLength = req.get('content-length');
+    if (contentLength && parseInt(contentLength) > maxSize) {
+      throw new Error('Request payload too large');
+    }
+
+    // Validate Content-Type for POST/PUT requests
+    if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
+      const contentType = req.get('content-type');
+      if (!contentType || !this.isValidContentType(contentType)) {
+        throw new Error('Invalid or missing Content-Type header');
+      }
+    }
+
+    // Validate headers for security
+    await this.validateHeaders(req);
+  }
+  /**
+   * Validate session and authentication security
+   */
+  private async validateSession(req: Request): Promise<void> {
+    // Skip validation for public endpoints
+    if (this.isPublicEndpoint(req.path)) {
+      return;
+    }
+
+    // Extract and validate session
+    const sessionToken = this.extractSessionToken(req);
+    if (sessionToken) {
+      const sessionValidation = await this.sessionSecurity.validateSession(sessionToken);
+      if (!sessionValidation.isValid) {
+        throw new Error('Invalid session');
+      }
+
+      // Check for suspicious activity using available methods
+      if (sessionValidation.session?.userId) {
+        const ip = req.ip || '0.0.0.0';
+        const userAgent = req.get('User-Agent') || '';
+        
+        // Log security event for monitoring
+        await this.logSecurityEvent(req, 'SESSION_VALIDATED');
+      }
+    }
+  }  /**
+   * Check rate limiting and abuse detection
+   */
+  private async checkRateLimit(req: Request): Promise<void> {
+    // This would integrate with existing rate limiting service
+    // For now, we'll add basic monitoring    await this.securityMonitoring.reportSecurityEvent(
+      'API_ABUSE',
+      'SecurityMiddleware',
+      {
+        path: req.path,
+        method: req.method,
+        timestamp: new Date(),
+      },
+      (req['user'] as any)?.username || (req['user'] as any)?.email,
+      req.ip || '0.0.0.0',
+      req.get('User-Agent') || ''
+    );
+  }
+
+  /**
+   * Prepare secure database context
+   */
+  private async prepareSecureDbContext(req: Request): Promise<void> {
+    // Add security context to request for database operations
+    req['securityContext'] = {
+      requestId: req['requestId'],
+      userId: req['user']?.username,
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+      timestamp: new Date(),
+    };
+
+    // Skip database validation for now - can be implemented later
+    // if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
+    //   await this.dbSecurity.validateQuery({
+    //     operation: req.method,
+    //     collection: this.extractCollectionFromPath(req.path),
+    //     userId: req['user']?.username,
+    //   });
+    // }
+  }
+
+  /**
+   * Log security event
+   */
+  private async logSecurityEvent(req: Request, eventType: string): Promise<void> {
+    await this.securityMonitoring.reportSecurityEvent(
+      eventType as any,
+      'SecurityMiddleware',
+      {
+        method: req.method,
+        path: req.path,
+        requestId: req['requestId'],
+        timestamp: new Date(),
+      },
+      req['user']?.username,
+      req.ip || '0.0.0.0',
+      req.get('User-Agent') || ''
+    );
+  }
+
+  /**
+   * Log security incident
+   */
+  private async logSecurityIncident(req: Request, error: Error): Promise<void> {
+    await this.securityMonitoring.reportSecurityEvent(
+      'SECURITY_INCIDENT',
+      'SecurityMiddleware',
+      {
+        error: error.message,
+        method: req.method,
+        path: req.path,
+        requestId: req['requestId'],
+        headers: req.headers,
+        body: req.body,
+        timestamp: new Date(),
+      },
+      req['user']?.username,
+      req.ip || '0.0.0.0',
+      req.get('User-Agent') || ''
+    );
+  }
+
+  /**
+   * Validate request headers for security
+   */
+  private async validateHeaders(req: Request): Promise<void> {
+    const headers = req.headers;
+
+    // Check for suspicious headers
+    const suspiciousHeaders = ['x-forwarded-for', 'x-real-ip', 'x-cluster-client-ip'];
+    for (const header of suspiciousHeaders) {
+      if (headers[header] && !this.isValidHeaderValue(headers[header] as string)) {
+        throw new Error(`Suspicious header value: ${header}`);
+      }
+    }
+
+    // Validate User-Agent
+    const userAgent = headers['user-agent'];
+    if (userAgent && this.isSuspiciousUserAgent(userAgent as string)) {
+      throw new Error('Suspicious User-Agent detected');
+    }
+  }
+
+  /**
+   * Helper methods
+   */
+  private generateRequestId(): string {
+    return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private isValidContentType(contentType: string): boolean {
+    const validTypes = [
+      'application/json',
+      'application/x-www-form-urlencoded',
+      'multipart/form-data',
+      'text/plain',
+    ];
+    return validTypes.some(type => contentType.toLowerCase().includes(type));
+  }
+
+  private isPublicEndpoint(path: string): boolean {
+    const publicPaths = [
+      '/health',
+      '/api/auth/login',
+      '/api/auth/register',
+      '/api/auth/refresh',
+    ];
+    return publicPaths.includes(path) || path.startsWith('/api/public');
+  }
+
+  private extractSessionToken(req: Request): string | null {
+    // Extract from Authorization header
+    const authHeader = req.get('Authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      return authHeader.substring(7);
+    }
+
+    // Extract from cookies
+    return req.cookies?.['session-token'] || null;
+  }
+
+  private extractCollectionFromPath(path: string): string {
+    // Extract collection name from API path
+    const match = path.match(/\/api\/([^\/]+)/);
+    return match ? match[1] : 'unknown';
+  }
+
+  private isValidHeaderValue(value: string): boolean {
+    // Basic validation for header values
+    return !/[<>\"'&]/.test(value) && value.length < 1000;
+  }
+
+  private isSuspiciousUserAgent(userAgent: string): boolean {
+    const suspiciousPatterns = [
+      /bot/i,
+      /crawler/i,
+      /scanner/i,
+      /hack/i,
+      /exploit/i,
+      /^$/,
+    ];
+    return suspiciousPatterns.some(pattern => pattern.test(userAgent));
+  }
+}

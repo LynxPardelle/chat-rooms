@@ -1,0 +1,61 @@
+config:
+  target: 'http://localhost:3001'
+  phases:
+    # Quick stress test - high load for short duration
+    - duration: 30
+      arrivalRate: 100
+      name: "Stress test"
+  processor: "./performance-test-processor.js"
+
+scenarios:
+  # WebSocket connection stress
+  - name: "WebSocket stress"
+    weight: 50
+    engine: socketio
+    socketio:
+      namespace: '/chat'
+    flow:
+      - emit:
+          channel: "authenticate"
+          data:
+            token: "stress-test-token-{{ $randomInt(1, 1000) }}"
+      - emit:
+          channel: "joinRoom"
+          data:
+            roomId: "stress-test-room"
+      - loop:
+          - emit:
+              channel: "sendMessage"
+              data:
+                roomId: "stress-test-room"
+                content: "Stress test message {{ $randomString() }}"
+                type: "text"
+          - think: 0.1
+        count: 20
+
+  # REST API stress
+  - name: "REST stress"
+    weight: 50
+    flow:
+      - post:
+          url: "/auth/login"
+          json:
+            email: "stress-user-{{ $randomInt(1, 100) }}@test.com"
+            password: "testpassword123"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+      - loop:
+          - get:
+              url: "/messages?roomId=stress-test-room&limit=10"
+              headers:
+                Authorization: "Bearer {{ authToken }}"
+          - post:
+              url: "/messages"
+              headers:
+                Authorization: "Bearer {{ authToken }}"
+              json:
+                roomId: "stress-test-room"
+                content: "Stress message {{ $randomString() }}"
+                type: "text"
+        count: 10

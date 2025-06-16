@@ -1,0 +1,40 @@
+config:
+  target: 'http://localhost:3001'
+  phases:
+    # Baseline load
+    - duration: 60
+      arrivalRate: 10
+      name: "Baseline"
+    # Gradual spike
+    - duration: 10
+      arrivalRate: 200
+      name: "Spike"
+    # Recovery period
+    - duration: 120
+      arrivalRate: 10
+      name: "Recovery"
+  processor: "./performance-test-processor.js"
+
+scenarios:
+  # Mixed workload during spike
+  - name: "Spike test"
+    weight: 100
+    engine: socketio
+    socketio:
+      namespace: '/chat'
+    flow:
+      - emit:
+          channel: "authenticate"
+          data:
+            token: "spike-test-token-{{ $randomInt(1, 1000) }}"
+      - emit:
+          channel: "joinRoom"
+          data:
+            roomId: "spike-test-room"
+      - emit:
+          channel: "sendMessage"
+          data:
+            roomId: "spike-test-room"
+            content: "Spike test message {{ $randomString() }}"
+            type: "text"
+      - think: 1

@@ -1,0 +1,25 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.ts$": ["ts-jest", {
+      "tsconfig": {
+        "module": "commonjs",
+        "target": "es2020",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "allowJs": false,
+        "skipLibCheck": true,
+        "strict": false
+      }
+    }]
+  },
+  "collectCoverageFrom": [
+    "**/*.(t|j)s"
+  ],
+  "coverageDirectory": "../coverage",
+  "testTimeout": 30000,
+  "setupFilesAfterEnv": ["<rootDir>/setup-tests.ts"]
+}

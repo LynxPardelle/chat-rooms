@@ -1,0 +1,558 @@
+import { 
+  Injectable, 
+  Logger, 
+  NotFoundException, 
+  BadRequestException, 
+  ForbiddenException, 
+  Inject,
+  ConflictException,
+  InternalServerErrorException
+} from '@nestjs/common';
+import { 
+  CreateMessageDto, 
+  UpdateMessageDto, 
+  MessageSearchDto, 
+  PaginationDto,
+  BulkMessageActionDto,
+  MessageAnalyticsFilterDto,
+  FlagMessageDto,
+  AddReactionDto,
+  MarkAsReadDto
+} from '../dtos/message.dto';
+import { 
+  MessageResponseDto,
+  PaginatedMessagesDto,
+  MessageAnalyticsDto,
+  MessageSearchResultDto
+} from '../dtos/message.dto';
+import { IMessageRepository, PaginatedResult } from '../../domain/interfaces';
+import { 
+  Message, 
+  MessageType, 
+  MessagePriority,
+  MessageStatus,
+  CreateMessageData,
+  UpdateMessageData,
+  BulkMessageAction,
+  MessageAnalytics,
+  UserWithoutPassword
+} from '../../domain/entities';
+import { AppLoggerService } from '../../infrastructure/logging';
+import { 
+  MESSAGE_REPOSITORY_TOKEN,
+  DEFAULT_ROOM_ID,
+  MAX_MESSAGE_LENGTH,
+  MAX_EDIT_TIME_MINUTES,
+  MAX_BULK_OPERATIONS,
+  MAX_MENTIONS_PER_MESSAGE,
+  MAX_ATTACHMENTS_PER_MESSAGE
+} from '../../domain/constants';
+import { MessageFilterExpression, MessageQueryOptions } from '../../domain/types/message-filter.types';
+
+@Injectable()
+export class MessageService {
+  private readonly logger = new Logger(MessageService.name);
+  
+  constructor(
+    @Inject(MESSAGE_REPOSITORY_TOKEN) private readonly messageRepository: IMessageRepository,
+    private readonly appLogger: AppLoggerService,
+  ) {}
+
+  /**
+   * Create a new message with comprehensive validation and processing
+   */
+  async createMessage(
+    createMessageDto: CreateMessageDto,
+    user: UserWithoutPassword,
+    metadata?: {
+      ipAddress?: string;
+      userAgent?: string;
+      location?: string;
+    }
+  ): Promise<MessageResponseDto> {
+    try {
+      this.appLogger.log('Creating new message', {
+        userId: user.id,
+        roomId: createMessageDto.roomId,
+        type: createMessageDto.type,
+        hasAttachments: createMessageDto.attachments?.length > 0,
+        mentions: createMessageDto.mentions?.length || 0
+      });
+
+      // Validate message content
+      await this.validateMessageContent(createMessageDto.content);
+
+      // Check user permissions for room
+      if (createMessageDto.roomId) {
+        await this.validateRoomAccess(user.id, createMessageDto.roomId);
+      }
+
+      // Validate mentions
+      if (createMessageDto.mentions?.length > 0) {
+        await this.validateMentions(createMessageDto.mentions, createMessageDto.roomId);
+      }
+
+      // Validate reply-to message
+      if (createMessageDto.replyToId) {
+        await this.validateReplyToMessage(createMessageDto.replyToId, user.id);
+      }
+
+      // Prepare message data
+      const messageData: CreateMessageData = {
+        content: createMessageDto.content,
+        type: createMessageDto.type || MessageType.TEXT,
+        roomId: createMessageDto.roomId || DEFAULT_ROOM_ID,
+        authorId: user.id,
+        authorUsername: user.username,
+        priority: createMessageDto.priority || MessagePriority.NORMAL,
+        mentions: createMessageDto.mentions || [],
+        attachments: createMessageDto.attachments || [],
+        replyToId: createMessageDto.replyToId,
+        metadata: {
+          ipAddress: metadata?.ipAddress,
+          userAgent: metadata?.userAgent,
+          location: metadata?.location,
+          createdAt: new Date()
+        }
+      };
+
+      // Create message in repository
+      const createdMessage = await this.messageRepository.create(messageData);
+
+      this.appLogger.log('Message created successfully', {
+        messageId: createdMessage.id,
+        userId: user.id,
+        roomId: createdMessage.roomId
+      });
+
+      return this.mapToResponseDto(createdMessage);
+
+    } catch (error) {
+      this.appLogger.error('Failed to create message', {
+        userId: user.id,
+        roomId: createMessageDto.roomId,
+        error: error.message,
+        stack: error.stack
+      });
+
+      if (error instanceof BadRequestException || 
+          error instanceof ForbiddenException || 
+          error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Failed to create message');
+    }
+  }
+
+  /**
+   * Get messages with pagination and optional filtering
+   */
+  async getMessages(
+    pagination: PaginationDto,
+    searchDto?: MessageSearchDto,
+  ): Promise<PaginatedMessagesDto> {
+    try {
+      this.appLogger.log('Fetching messages', {
+        page: pagination.page,
+        limit: pagination.limit,
+        roomId: searchDto?.roomId,
+        searchQuery: searchDto?.searchQuery,
+        filterCriteria: searchDto ? Object.keys(searchDto).length : 0
+      });
+
+      const paginationOptions = {
+        page: pagination.page,
+        limit: Math.min(pagination.limit, 100), // Enforce max limit
+        sortBy: pagination.sortBy || 'createdAt',
+        sortOrder: pagination.sortOrder || 'desc'
+      };
+
+      // Use findByRoomId if roomId is specified, otherwise get all messages
+      let result: PaginatedResult<Message>;
+      if (searchDto?.roomId) {
+        result = await this.messageRepository.findByRoomId(searchDto.roomId, paginationOptions);
+      } else {
+        result = await this.messageRepository.findByRoomId(DEFAULT_ROOM_ID, paginationOptions);
+      }
+
+      const responseMessages = result.data.map(message => this.mapToResponseDto(message));
+
+      return {
+        data: responseMessages,
+        pagination: result.pagination
+      };
+
+    } catch (error) {
+      this.appLogger.error('Failed to fetch messages', {
+        page: pagination.page,
+        limit: pagination.limit,
+        error: error.message
+      });
+      throw new InternalServerErrorException('Failed to fetch messages');
+    }
+  }
+
+  /**
+   * Get a single message by ID
+   */
+  async getMessageById(id: string): Promise<MessageResponseDto> {
+    try {
+      const message = await this.messageRepository.findById(id);
+
+      if (!message) {
+        throw new NotFoundException(`Message with ID ${id} not found`);
+      }
+
+      return this.mapToResponseDto(message);
+
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      this.appLogger.error('Failed to fetch message by ID', {
+        messageId: id,
+        error: error.message
+      });
+      throw new InternalServerErrorException('Failed to fetch message');
+    }
+  }
+
+  /**
+   * Update an existing message
+   */
+  async updateMessage(
+    id: string,
+    updateMessageDto: UpdateMessageDto,
+    user: UserWithoutPassword,
+  ): Promise<MessageResponseDto> {
+    try {
+      this.appLogger.log('Updating message', {
+        messageId: id,
+        userId: user.id,
+        hasNewContent: !!updateMessageDto.content
+      });
+
+      // Find existing message
+      const existingMessage = await this.messageRepository.findById(id);
+      if (!existingMessage) {
+        throw new NotFoundException(`Message with ID ${id} not found`);
+      }
+
+      // Check if user can edit this message
+      if (existingMessage.authorId !== user.id) {
+        throw new ForbiddenException('You can only edit your own messages');
+      }
+
+      // Check edit time limit
+      const messageAge = Date.now() - existingMessage.createdAt.getTime();
+      const maxEditTime = MAX_EDIT_TIME_MINUTES * 60 * 1000;
+      if (messageAge > maxEditTime) {
+        throw new ForbiddenException(`Messages can only be edited within ${MAX_EDIT_TIME_MINUTES} minutes of creation`);
+      }
+
+      // Validate new content if provided
+      if (updateMessageDto.content) {
+        await this.validateMessageContent(updateMessageDto.content);
+      }
+
+      // Prepare update data
+      const updateData: UpdateMessageData = {
+        ...(updateMessageDto.content && { content: updateMessageDto.content }),
+        ...(updateMessageDto.priority && { priority: updateMessageDto.priority }),
+        editHistory: [
+          ...(existingMessage.editHistory || []),
+          {
+            editedAt: new Date(),
+            editedBy: user.id,
+            previousContent: existingMessage.content,
+            reason: updateMessageDto.editReason || 'Content updated'
+          }
+        ],
+        updatedAt: new Date()
+      };
+
+      // Update message
+      const updatedMessage = await this.messageRepository.update(id, updateData);
+
+      this.appLogger.log('Message updated successfully', {
+        messageId: id,
+        userId: user.id
+      });
+
+      return this.mapToResponseDto(updatedMessage);
+
+    } catch (error) {
+      if (error instanceof NotFoundException || 
+          error instanceof ForbiddenException || 
+          error instanceof BadRequestException) {
+        throw error;
+      }
+
+      this.appLogger.error('Failed to update message', {
+        messageId: id,
+        userId: user.id,
+        error: error.message
+      });
+      throw new InternalServerErrorException('Failed to update message');
+    }
+  }
+
+  /**
+   * Delete a message
+   */
+  async deleteMessage(id: string, user: UserWithoutPassword): Promise<void> {
+    try {
+      this.appLogger.log('Deleting message', {
+        messageId: id,
+        userId: user.id
+      });
+
+      // Find existing message
+      const existingMessage = await this.messageRepository.findById(id);
+      if (!existingMessage) {
+        throw new NotFoundException(`Message with ID ${id} not found`);
+      }
+
+      // Check if user can delete this message
+      if (existingMessage.authorId !== user.id) {
+        throw new ForbiddenException('You can only delete your own messages');
+      }
+
+      // Soft delete by updating status
+      await this.messageRepository.update(id, {
+        status: MessageStatus.FAILED, // Using FAILED to represent deleted
+        deletedAt: new Date(),
+        deletedBy: user.id
+      });
+
+      this.appLogger.log('Message deleted successfully', {
+        messageId: id,
+        userId: user.id
+      });
+
+    } catch (error) {
+      if (error instanceof NotFoundException || 
+          error instanceof ForbiddenException) {
+        throw error;
+      }
+
+      this.appLogger.error('Failed to delete message', {
+        messageId: id,
+        userId: user.id,
+        error: error.message
+      });
+      throw new InternalServerErrorException('Failed to delete message');
+    }
+  }
+
+  /**
+   * Add reaction to a message
+   */
+  async addReaction(id: string, reactionDto: AddReactionDto, user: UserWithoutPassword): Promise<MessageResponseDto> {
+    try {
+      const message = await this.messageRepository.findById(id);
+      if (!message) {
+        throw new NotFoundException(`Message with ID ${id} not found`);
+      }
+
+      const reactions = message.reactions || [];
+      const existingReaction = reactions.find(r => r.userId === user.id && r.emoji === reactionDto.emoji);
+
+      if (existingReaction) {
+        throw new ConflictException('You have already reacted with this emoji');
+      }
+
+      reactions.push({
+        emoji: reactionDto.emoji,
+        userId: user.id,
+        username: user.username,
+        createdAt: new Date()
+      });
+
+      const updatedMessage = await this.messageRepository.update(id, { reactions });
+      return this.mapToResponseDto(updatedMessage);
+
+    } catch (error) {
+      if (error instanceof NotFoundException || error instanceof ConflictException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to add reaction');
+    }
+  }
+
+  /**
+   * Mark message as read
+   */
+  async markAsRead(id: string, user: UserWithoutPassword): Promise<void> {
+    try {
+      const message = await this.messageRepository.findById(id);
+      if (!message) {
+        throw new NotFoundException(`Message with ID ${id} not found`);
+      }
+
+      const readBy = message.readBy || [];
+      const alreadyRead = readBy.some(r => r.userId === user.id);
+
+      if (!alreadyRead) {
+        readBy.push({
+          userId: user.id,
+          username: user.username,
+          readAt: new Date()
+        });
+
+        await this.messageRepository.update(id, { readBy });
+      }
+
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to mark message as read');
+    }
+  }
+
+  /**
+   * Search messages with advanced filtering
+   */
+  async searchMessages(
+    searchDto: MessageSearchDto,
+    pagination: PaginationDto
+  ): Promise<MessageSearchResultDto> {
+    try {
+      const filters: MessageFilterExpression = this.buildSearchFilters(searchDto);
+      const options: MessageQueryOptions = {
+        page: pagination.page,
+        limit: pagination.limit,
+        sortBy: pagination.sortBy || 'createdAt',
+        sortOrder: pagination.sortOrder || 'desc'
+      };
+
+      const result = await this.messageRepository.findWithFilters(filters, options);
+      
+      return {
+        data: result.data.map(message => this.mapToResponseDto(message)),
+        pagination: result.pagination,
+        searchCriteria: searchDto,
+        totalMatchingMessages: result.pagination.total
+      };
+
+    } catch (error) {
+      this.appLogger.error('Failed to search messages', {
+        searchCriteria: searchDto,
+        error: error.message
+      });
+      throw new InternalServerErrorException('Failed to search messages');
+    }
+  }
+
+  // Private helper methods
+
+  private async validateMessageContent(content: string): Promise<void> {
+    if (!content || !content.trim()) {
+      throw new BadRequestException('Message content cannot be empty');
+    }
+
+    if (content.length > MAX_MESSAGE_LENGTH) {
+      throw new BadRequestException(`Message content cannot exceed ${MAX_MESSAGE_LENGTH} characters`);
+    }
+
+    // Additional content validation (profanity, spam, etc.) could be added here
+  }
+
+  private async validateRoomAccess(userId: string, roomId: string): Promise<void> {
+    // This would typically check if user has access to the room
+    // For now, we'll allow access to all rooms
+    // In a real implementation, this would check room permissions
+  }
+
+  private async validateMentions(mentions: string[], roomId?: string): Promise<void> {
+    if (mentions.length > MAX_MENTIONS_PER_MESSAGE) {
+      throw new BadRequestException(`Cannot mention more than ${MAX_MENTIONS_PER_MESSAGE} users in a single message`);
+    }
+
+    // Additional mention validation could be added here
+    // e.g., check if mentioned users exist and have access to the room
+  }
+
+  private async validateReplyToMessage(replyToId: string, userId: string): Promise<void> {
+    const replyToMessage = await this.messageRepository.findById(replyToId);
+    if (!replyToMessage) {
+      throw new BadRequestException('The message you are replying to does not exist');
+    }
+
+    // Additional validation could be added here
+    // e.g., check if user has access to the original message
+  }
+
+  private buildSearchFilters(searchDto: MessageSearchDto): MessageFilterExpression {
+    const filters: MessageFilterExpression = {};
+
+    if (searchDto.roomId) {
+      filters.roomId = searchDto.roomId;
+    }
+
+    if (searchDto.authorId) {
+      filters.authorId = searchDto.authorId;
+    }
+
+    if (searchDto.type) {
+      filters.type = searchDto.type;
+    }
+
+    if (searchDto.priority) {
+      filters.priority = searchDto.priority;
+    }
+
+    if (searchDto.status) {
+      filters.status = searchDto.status;
+    }
+
+    if (searchDto.searchQuery) {
+      filters.content = { $regex: searchDto.searchQuery, $options: 'i' };
+    }
+
+    if (searchDto.dateFrom || searchDto.dateTo) {
+      filters.createdAt = {};
+      if (searchDto.dateFrom) {
+        filters.createdAt.$gte = new Date(searchDto.dateFrom);
+      }
+      if (searchDto.dateTo) {
+        filters.createdAt.$lte = new Date(searchDto.dateTo);
+      }
+    }
+
+    if (searchDto.hasAttachments !== undefined) {
+      if (searchDto.hasAttachments) {
+        filters['attachments.0'] = { $exists: true };
+      } else {
+        filters.attachments = { $size: 0 };
+      }
+    }
+
+    return filters;
+  }
+
+  private mapToResponseDto(message: Message): MessageResponseDto {
+    return {
+      id: message.id,
+      content: message.content,
+      type: message.type,
+      roomId: message.roomId,
+      authorId: message.authorId,
+      authorUsername: message.authorUsername,
+      priority: message.priority,
+      status: message.status,
+      mentions: message.mentions || [],
+      attachments: message.attachments || [],
+      reactions: message.reactions || [],
+      replyToId: message.replyToId,
+      editHistory: message.editHistory || [],
+      readBy: message.readBy || [],
+      createdAt: message.createdAt,
+      updatedAt: message.updatedAt,
+      metadata: message.metadata
+    };
+  }
+}
